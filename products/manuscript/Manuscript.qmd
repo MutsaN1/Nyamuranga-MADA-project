@@ -1,8 +1,8 @@
 ---
-title: "Example Manuscript Template for a Data Analysis Project"
+title: ""
 subtitle: ""
-author: Andreas Handel
-date: "`r Sys.Date()`"
+author: Mutsa Nyamuranga
+date: "02/01/2024"
 format:
   docx:
     toc: false
@@ -12,22 +12,16 @@ bibliography: ../assets/dataanalysis-references.bib
 csl: ../assets/apa.csl
 ---
 
-The structure below is one possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed. 
-You don't need to have exactly these sections, but the content covering those sections should be addressed.
-
 This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
 
 
-```{r, echo=FALSE, message=FALSE}
-# load a few R packages
-library(here)
-library(knitr)
-```
-
-
-
 # Summary/Abstract
-_Write a summary of your project._
+
+
+
+
+
+	
 
 
 {{< pagebreak >}}
@@ -36,17 +30,40 @@ _Write a summary of your project._
 # Introduction 
 
 ## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
+
+Atherosclerosis, a chronic inflammatory disease of the arterial wall, remains a leading cause of cardiovascular morbidity and mortality worldwide. Despite significant advancements in understanding its pathophysiology, effective therapeutic interventions are still in demand. Recent research has shed light on the potential role of dietary β-carotene and its conversion to vitamin A in modulating atherosclerosis progression and resolution.
+
+Several studies have demonstrated the beneficial effects of β-carotene in delaying atherosclerosis progression in experimental models, along with its association with reduced cardiovascular risk in humans. Moreover, genetic variants in the BCO1 gene, responsible for converting β-carotene to vitamin A, have been linked to alterations in circulating carotenoid levels and plasma lipid profiles in individuals. However, the precise mechanisms underlying these effects, particularly regarding the interplay between β-carotene, BCO1 activity, and atherosclerosis progression or resolution, remain unclear.
 
 ## Description of data and data source
-_Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
+The data I will be using is based on: 
+
+Pinos, I., et al. (2024). "β-Carotene accelerates the resolution of atherosclerosis in mice." eLife 12: RP87430.
+
+The data consists of measurements of circulating β-carotene and retinoic acid levels, along with relevant biomarkers and clinical characteristics, collected from a cohort of individuals with varying degrees of atherosclerosis progression and resolution. Genetic information on BCO1 activity, including genetic variants associated with BCO1 activity, may also be included in the dataset. The data was collected through blood sample analysis and genetic testing.
+
+```{r}
+# Load necessary packages
+library(renv)
+library(readxl) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+
+# Load the dataset (replace "file_path" with the actual file path)
+# Load necessary package
+library(readxl)
+
+# Read Excel file
+rawdata <- read_excel("~/Desktop/MADA-course/Nyamuranga-MADA-project/data/raw-data/elife-87430-data1-v1.xlsx")
+```
 
 ## Questions/Hypotheses to be addressed
-_State the research questions you plan to answer with this analysis._
 
-To cite other work (important everywhere, but likely happens first in introduction), make sure your references are in the bibtex file specified in the YAML header above (here `dataanalysis_template_references.bib`) and have the right bibtex key. Then you can include like this:
-
-Examples of reproducible research projects can for instance be found in [@mckay2020; @mckay2020a].
+  The question I want to answer using the data is whether there is a correlation between circulating β-carotene levels, BCO1 genetic variants, and the progression or resolution of atherosclerosis. Specifically, I am interested in examining how these factors relate to plasma lipid profiles (e.g., cholesterol, triglycerides) and immune cell populations, particularly Treg levels, in individuals with atherosclerosis. 
+  The main outcome of interest will be the degree of atherosclerosis progression or resolution, potentially measured by imaging techniques or clinical assessments of plaque burden. Additionally, plasma lipid profiles and immune cell populations, particularly Treg levels, would be of interest as secondary outcomes. The specific predictors of interest would include circulating β-carotene levels, genetic variants associated with BCO1 activity, plasma lipid profiles, and immune cell populations.
+  The data analysis will likely involve statistical methods such as correlation analysis to assess the relationships between predictors and outcomes. Regression modeling could be used to examine the predictive value of circulating β-carotene levels and BCO1 genetic variants on atherosclerosis progression or resolution, controlling for potential confounding variables. Further exploration may involve visualization techniques to identify patterns and trends in the data.
 
 
 
