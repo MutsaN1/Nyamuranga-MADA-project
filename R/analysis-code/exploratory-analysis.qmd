@@ -1,27 +1,23 @@
 ---
-title: "An example exploratory analysis script"
-author: "Andreas Handel"
-date: "10/28/2021"
+title: "Data Exploration"
+author: "Mutsa Nyamuranga"
+date: "2024-02-23"
 output: html_document
 ---
 
-  
-  
 This Quarto file loads the cleaned data and does some exploring.
 
-I'm only showing it the way where the code is included in the file. 
-As described in the `processing_code` materials, I currently prefer the approach of having R code in a separate file and pulling it in.
+I'm only showing it the way where the code is included in the file. As described in the `processing_code` materials, I currently prefer the approach of having R code in a separate file and pulling it in.
 
 But I already had this written and haven't yet re-done it that way. Feel free to redo and send a pull request on GitHub :)
 
-Again, it is largely a matter of preference and what makes the most sense to decide if one wants to have code inside Quarto files, or as separate R files.
-And sometimes, an R script with enough comments is good enough and one doesn't need a Quarto file.
+Again, it is largely a matter of preference and what makes the most sense to decide if one wants to have code inside Quarto files, or as separate R files. And sometimes, an R script with enough comments is good enough and one doesn't need a Quarto file.
 
 Also note that while here I split cleaning and exploring, this is iterative. You saw that as part of the processing, we already had to explore the data somewhat to understand how to clean it. In general, as you explore, you'll find things that need cleaning. As you clean, you can explore more. Therefore, at times it might make more sense to combine the cleaning and exploring code parts into a single R or Quarto file. Or split things in any other logical way.
 
 As part of the exploratory analysis, you should produce plots or tables or other summary quantities for the most interesting/important quantities in your data. Depending on the total number of variables in your dataset, explore all or some of the others. Figures produced here might be histograms or density plots, correlation plots, etc. Tables might summarize your data.
 
-Start by exploring one variable at a time. Then continue by creating plots or tables of the outcome(s) of interest and the predictor/exposure/input variables you are most interested in. If your dataset is small, you can do that for all variables. 
+Start by exploring one variable at a time. Then continue by creating plots or tables of the outcome(s) of interest and the predictor/exposure/input variables you are most interested in. If your dataset is small, you can do that for all variables.
 
 Plots produced here can be scatterplots, boxplots, violinplots, etc. Tables can be simple 2x2 tables or larger ones.
 
@@ -33,82 +29,86 @@ library(here) #for data loading/saving
 library(dplyr)
 library(skimr)
 library(ggplot2)
+library(tidyr)
+library(forcats)
 ```
-
 
 Load the data.
 
 ```{r}
 #Path to data. Note the use of the here() package and not absolute paths
-data_location <- here::here("data","processed_data","processeddata.rds")
+figdata <- here::here("data","processed_data","processeddata.rds")
 #load data
-mydata <- readRDS(data_location)
+explorfigdata <- readRDS(figdata)
 ```
-
-
-
-
 
 # Data exploration through tables
 
 Showing a bit of code to produce and save a summary table.
 
-
 ```{r}
-summary_df = skimr::skim(mydata)
-print(summary_df)
+summary_explorfigdata = skimr::skim(explorfigdata)
+print(summary_explorfigdata)
 # save to file
-summarytable_file = here("results", "summarytable.rds")
-saveRDS(summary_df, file = summarytable_file)
+summarytable_elife = here("results", "summarytable.rds")
+saveRDS(summary_explorfigdata, file = summarytable_elife)
 ```
 
 We are saving the results to the `results` folder. Depending on how many tables/figures you have, it might make sense to have separate folders for each. And/or you could have separate folders for exploratory tables/figures and for final tables/figures. Just choose a setup that makes sense for your project and works for you, and provide enough documentation that someone can understand what you are doing.
 
-
 # Data exploration through figures
 
-Histogram plots for the continuous outcomes. 
+Here, I have created code that develops a bar graph to visualize the distribution of body weight in each condition. This will show the essential volume of body weight throughout the 16 weeks. This will not not be reliable for inferences but essential for drawing a baseline.
 
-Height first.
-
-```{r}
-p1 <- mydata %>% ggplot(aes(x=Height)) + geom_histogram() 
-plot(p1)
-figure_file = here("results","height_distribution.png")
-ggsave(filename = figure_file, plot=p1) 
-```
-
-Now weights.
+## Total Weights
 
 ```{r}
-p2 <- mydata %>% ggplot(aes(x=Weight)) + geom_histogram() 
-plot(p2)
-figure_file = here("results","weight_distribution.png")
-ggsave(filename = figure_file, plot=p2) 
+# Convert columns to numeric if needed
+explorfigdata <- mutate_all(explorfigdata, as.numeric)
+
+# Remove the "Week" variable
+explorfigdata1 <- select(explorfigdata, -Week)
+
+# Reshape the data and calculate sum for each condition
+explorfigdata_long <- explorfigdata1 %>%
+  gather(condition, value) %>%
+  filter(!is.na(value)) %>%  # Remove NA values if any
+  group_by(condition) %>%
+  summarise(sum_value = sum(value))
+
+# Create Bar Graph for Visualization
+bar1 <- ggplot(explorfigdata_long, aes(x = fct_reorder(condition, desc(sum_value)), y = sum_value, fill = condition)) +
+  geom_col() +
+  scale_fill_manual(values = c("red", "blue", "blue", "red", "red", "blue")) +  # Fill colors
+  scale_color_manual(values = c("red", "blue", "blue", "red", "red", "blue")) +  # Border colors
+  labs(title = "Total Body Weight for Conditions",
+       x = "Condition", y = "Sum of Weights")
+
+plot(bar1)
+# Saving the plot as an image file
+figure_file = here("results","condition_distro.png")
+ggsave(filename = figure_file, plot=bar1) 
 ```
 
-Now height as function of weight.
+I color coded for male and female stratified conditions. Here, we see that the beta-carotene condition for males has the highest overall total body weight, while the baseline female condition has the lowest weight.
+
+## Weight over time
 
 ```{r}
-p3 <- mydata %>% ggplot(aes(x=Height, y=Weight)) + geom_point() + geom_smooth(method='lm')
-plot(p3)
-figure_file = here("results","height_weight.png")
-ggsave(filename = figure_file, plot=p3) 
+# Reshape data to long format
+library(tidyr)
+body_weights_long <- pivot_longer(explorfigdata, -Week, names_to = "Category", values_to = "BodyWeight")
+
+summary(body_weights_long)
+str(body_weights_long)
+
+# Plot the data
+library(ggplot2)
+ggplot(body_weights_long, aes(x = Week, y = BodyWeight, color = Category)) +
+  geom_line() +
+  labs(title = "Comparison of Body Weight Changes Across Categories",
+       x = "Week", y = "Body Weight") +
+  theme_minimal()
 ```
 
-Once more height as function of weight, stratified by gender. Note that there is so little data, it's a bit silly. But we'll plot it anyway.
-
-```{r}
-p4 <- mydata %>% ggplot(aes(x=Height, y=Weight, color = Gender)) + geom_point() + geom_smooth(method='lm')
-plot(p4)
-figure_file = here("results","height_weight_stratified.png")
-ggsave(filename = figure_file, plot=p4) 
-```
-
-
-
-# Notes
-
-For your own explorations, tables and figures can be "quick and dirty". As long as you can see what's going on, there is no need to polish them. That's in contrast to figures you'll produce for your final products (paper, report, presentation, website, etc.). Those should look as nice, polished and easy to understand as possible.
-
-
+With some final exploration. We look at the change in body weight over the 16 weeks. We see that males start and finish with higher body weights as expected. Of note, we see that the control and Beta-Carotene condition for female mice ends with the lowest body weights.

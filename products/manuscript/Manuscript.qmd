@@ -51,7 +51,6 @@ library(tidyr) #for data processing/cleaning
 library(skimr) #for nice visualization of data 
 library(here) #to set paths
 
-# Load the dataset (replace "file_path" with the actual file path)
 # Load necessary package
 library(readxl)
 
@@ -72,7 +71,6 @@ rawdata <- read_excel("~/Desktop/MADA-course/Nyamuranga-MADA-project/data/raw-da
 
 # Methods 
 
-_Describe your methods. That should describe the data, the cleaning processes, and the analysis approaches. You might want to provide a shorter description here and all the details in the supplement._
 
 
 ## Schematic of workflow
@@ -91,11 +89,12 @@ knitr::include_graphics(here("products","assets","antigen-recognition.png"))
 
 
 ## Data aquisition
-_As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._
+The data was acquired online from Pinos et. al. in the additional files section. The data was formated in tables within an excel file which had to be processed and cleaned to identify target data. The excel file was loaded in through readxl and downloaded into a processing quarto file. 
 
 
 ## Data import and cleaning
-_Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._
+
+The provided R code is structured to process and clean raw data extracted from an Excel file. Initially, the data is loaded into R using the read_excel function, and a specific range of cells is extracted from the Excel sheet "Figure 1-suppl figure 1". The subsequent cleaning steps involve removing columns containing standard deviation data and ensuring clarity and consistency by labeling conditions with "Female" and "Male" appropriately. Following this, basic exploration functions such as print, str, summary, and glimpse are utilized to examine the cleaned data frame's structure and content. Finally, the cleaned data is saved as an RDS file for future analysis. 
 
 
 ## Statistical analysis
