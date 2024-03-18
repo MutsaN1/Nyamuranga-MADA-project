@@ -5,16 +5,23 @@
 #and saves the results to the results folder
 
 #load needed packages. make sure they are installed.
+library(here) #for data loading/saving
+library(dplyr)
+library(skimr)
+library(ggplot2)
+library(tidyr)
+library(forcats)
 library(ggplot2) #for plotting
 library(broom) #for cleaning up output from lm()
 library(here) #for data loading/saving
 
-#path to data
-#note the use of the here() package and not absolute paths
-data_location <- here::here("data","processed_data","processeddata.rds")
+#Load the data.
 
-#load data. 
-mydata <- readRDS(data_location)
+#Path to data. Note the use of the here() package and not absolute paths
+figdata <- here::here("data","processed_data","processeddata.rds")
+#load data
+explorfigdata <- readRDS(figdata)
+body_weights <- pivot_longer(explorfigdata, -Week, names_to = "Category", values_to = "BodyWeight")
 
 
 ######################################
@@ -25,32 +32,40 @@ mydata <- readRDS(data_location)
 #### First model fit
 # fit linear model using height as outcome, weight as predictor
 
-lmfit1 <- lm(Height ~ Weight, mydata)  
+linCat <- lm(BodyWeight ~ Category, body_weights)  
 
 # place results from fit into a data frame with the tidy function
-lmtable1 <- broom::tidy(lmfit1)
+linCattable <- broom::tidy(linCat)
 
 #look at fit results
-print(lmtable1)
+print(linCattable)
 
 # save fit results table  
-table_file1 = here("results", "resulttable1.rds")
-saveRDS(lmtable1, file = table_file1)
+table_linCat = here("results", "resulttable1.rds")
+saveRDS(linCattable, file = table_linCat)
 
 ############################
 #### Second model fit
-# fit linear model using height as outcome, weight and gender as predictor
 
-lmfit2 <- lm(Height ~ Weight + Gender, mydata)  
+# Assuming your time series data is stored in your_data with Week as the time variable and BodyWeight as the data
+
+# Load required library
+library(strucchange)
+
+# Fit a linear regression model with treatment variables
+timeseries <- lm(BodyWeight ~ Week + I(Week^2) + I(Week^3) + Category, data = body_weights)
+
+# Summary of the model
+summary(timeseries)
 
 # place results from fit into a data frame with the tidy function
-lmtable2 <- broom::tidy(lmfit2)
+timeseriestbl <- broom::tidy(timeseries)
 
 #look at fit results
-print(lmtable2)
+print(timeseriestbl)
 
 # save fit results table  
-table_file2 = here("results", "resulttable2.rds")
-saveRDS(lmtable2, file = table_file2)
+seriestable_file2 = here("results", "resulttable2.rds")
+saveRDS(timeseriestbl, file = seriestable_file2)
 
   

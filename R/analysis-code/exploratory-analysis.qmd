@@ -93,6 +93,8 @@ ggplot(body_weights_long, aes(x = Week, y = BodyWeight, color = Category)) +
   labs(title = "Comparison of Body Weight Changes Across Categories",
        x = "Week", y = "Body Weight") +
   theme_minimal()
+figure_file2 = here("results", "figures", "category_distro.png")
+ggsave(filename = figure_file2, plot=bar1) 
 ```
 
 With some final exploration. We look at the change in body weight over the 16 weeks. We see that males start and finish with higher body weights as expected. Of note, we see that the control and Beta-Carotene condition for female mice ends with the lowest body weights.

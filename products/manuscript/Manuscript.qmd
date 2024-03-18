@@ -72,22 +72,6 @@ rawdata <- read_excel("~/Desktop/MADA-course/Nyamuranga-MADA-project/data/raw-da
 # Methods 
 
 
-
-## Schematic of workflow
-
-Sometimes you might want to show a schematic diagram/figure that was not created with code (if you can do it with code, do it). @fig-schematic is an example of some - completely random/unrelated - schematic that was generated with Biorender.
-We store those figures in the `assets` folder.
-
-```{r}
-#| label: fig-schematic
-#| fig-cap: "A figure that is manually generated and shows some overview/schematic. This has nothing to do with the data, it's just a random one from one of our projects I found and placed here."
-#| echo: FALSE
-knitr::include_graphics(here("products","assets","antigen-recognition.png"))
-```
-
-
-
-
 ## Data aquisition
 The data was acquired online from Pinos et. al. in the additional files section. The data was formated in tables within an excel file which had to be processed and cleaned to identify target data. The excel file was loaded in through readxl and downloaded into a processing quarto file. 
 
@@ -98,8 +82,22 @@ The provided R code is structured to process and clean raw data extracted from a
 
 
 ## Statistical analysis
-_Explain anything related to your statistical analyses._
 
+```{r load_image, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
+library(png)
+condimage <- readPNG(here("results", "figures", "condition_distro.png"))
+par(mar = c(1, 1, 1, 1))
+plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
+rasterImage(condimage, 0.1, 0.1, 0.9, 0.9)  
+```
+
+```{r load_image, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
+library(png)
+catimage <- readPNG(here("results", "figures", "category_distro.png"))
+par(mar = c(1, 1, 1, 1))
+plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
+rasterImage(catimage, 0.1, 0.1, 0.9, 0.9)  
+```
 
 {{< pagebreak >}}
 
@@ -108,51 +106,47 @@ _Explain anything related to your statistical analyses._
 
 ## Exploratory/Descriptive analysis
 
-_Use a combination of text/tables/figures to explore and describe your data. Show the most important descriptive results here. Additional ones should go in the supplement. Even more can be in the R and Quarto files that are part of your project._
+
 
 
 @tbl-summarytable shows a summary of the data.
 
-Note the loading of the data providing a **relative** path using the `../../` notation. (Two dots means a folder up). You never want to specify an **absolute** path like `C:\ahandel\myproject\results\` because if you share this with someone, it won't work for them since they don't have that path. You can also use the `here` R package to create paths. See examples of that below.
 
 ```{r}
 #| label: tbl-summarytable
 #| tbl-cap: "Data summary table."
 #| echo: FALSE
-resulttable=readRDS("../../results/summarytable.rds")
-knitr::kable(resulttable)
+summarytable = readRDS(here("results","tables","summarytable.rds"))
+knitr::kable(summarytable)
 ```
 
 
 
 ## Basic statistical analysis
 
-_To get some further insight into your data, if reasonable you could compute simple statistics (e.g. simple models with 1 predictor) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._
-
-
-@fig-result shows a scatterplot figure produced by one of the R scripts.
-
-```{r}
-#| label: fig-result
-#| fig-cap: "Height and weight stratified by gender."
-#| echo: FALSE
-knitr::include_graphics(here("results","height-weight-stratified.png"))
-```
-
 
 ## Full analysis
 
-_Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here._
-
-Example @tbl-resulttable2 shows a summary of a linear model fit.
-
 ```{r}
-#| label: tbl-resulttable2
+#| label: linreg
 #| tbl-cap: "Linear model fit table."
 #| echo: FALSE
-resulttable2 = readRDS(here("results","tables-files","resulttable2.rds"))
+resulttable1 = readRDS(here("results","output","resulttable1.rds"))
+knitr::kable(resulttable1)
+```
+Linear Regression: The results reveal the estimated effects of different treatment categories on the response variable, body weight, along with their statistical significance. The intercept, estimated at 25.0, represents the baseline level of the response variable when all predictors are zero. Relative to a reference category, presumably "BaselineM", coefficients associated with each treatment category provide insights into their effects on the response variable. For instance, "BaselineM" and "BetaCaroM" are associated with increases in the response variable by approximately 8.63 and 9.85 units, respectively, compared to the reference category. Conversely, "BetaCaroteneF", "ControlF", and "ControlM" exhibit smaller or even negative effects, but the statistical significance varies among these categories, with "BetaCaroteneF" showing a non-significant effect and others demonstrating statistically significant effects with low p-values.
+
+```{r}
+#| label: timeseriestable
+#| tbl-cap: "Time Series model fit table."
+#| echo: FALSE
+resulttable2 = readRDS(here("results","output","resulttable2.rds"))
 knitr::kable(resulttable2)
 ```
+
+Time Series Model: The linear regression model was constructed to investigate the relationship between body weight and time (Week) while considering treatment variables. The model revealed several key findings. Firstly, the estimated intercept of 14.9634 suggests that the average body weight at the beginning of the observation period, when all other predictors are zero, is approximately 14.9634 units. Additionally, the coefficient for Week, estimated at 1.1047, indicates that body weight tends to increase by approximately 1.1047 units for each additional week, assuming a linear trend. However, the quadratic and cubic terms of Week were not statistically significant, suggesting that the relationship between body weight and time may not exhibit quadratic or cubic trends.
+
+Furthermore, the model uncovered notable effects of treatment variables on body weight. Specifically, compared to the reference level "BaselineM", various treatment categories exhibited significant impacts on body weight. For instance, "BetaCaroM" and "ControlM" categories were associated with increased body weight by 8.6331 and 8.1861 units, respectively, compared to "BaselineM". Conversely, "BetaCaroteneF" and "ControlF" categories were associated with decreases in body weight by 1.5694 and 1.0445 units, respectively, compared to "BaselineM". These findings collectively suggest that both time and treatment variables play crucial roles in influencing body weight variations over the observed period.
 
 
 {{< pagebreak >}}
