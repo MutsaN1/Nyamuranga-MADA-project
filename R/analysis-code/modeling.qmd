@@ -1,0 +1,198 @@
+---
+title: "Model Fitting"
+author: "Mutsa Nyamuranga"
+date: "2024-03-29"
+output: html_document
+---
+
+# Introduction
+
+# Set Up 
+
+## Load Necessary Packages
+First we will load the data and additional packages necessary for the
+assigniment.
+
+```{r}
+library(readr) #for loading Excel files
+library(dplyr) #for data processing/cleaning
+library(tidyr) #for data processing/cleaning
+library(skimr) #for nice visualization of data 
+library(here) #to set paths
+library(ggplot2) # for plots
+library(gtsummary)# for summary tables
+library(patchwork) #for combine plots
+library(tidymodels)
+library(recipes)
+library(parsnip)
+```
+
+## Load Data
+
+```{r}
+#Path to data. Note the use of the here() package and not absolute paths
+figdata <- here::here("data","processed_data","processeddata.rds")
+#load data
+explorfigdata <- readRDS(figdata)
+body_weights <- pivot_longer(explorfigdata, -Week, names_to = "Category", values_to = "BodyWeight")
+```
+
+# Modeling
+
+Here, I conduct a model fitting to assess the relationship of the
+outcome of interest with the other variables. Tidymodels provides the
+functions necessary for modeling and preprocessing data. The recipe
+function specifies the data preprocessing steps. In this case, the
+outcome variable (Y) is defined as the response variable, and all other
+variables are considered predictors. step_dummy converts categorical
+predictors into dummy variables, step_center centers numeric predictors
+around their mean, and step_scale scales numeric predictors to have unit
+variance.
+
+## First model fit
+```{r}
+# fit linear model using height as outcome, weight as predictor
+
+linCat <- lm(BodyWeight ~ Category, body_weights)  
+
+# place results from fit into a data frame with the tidy function
+linCattable <- broom::tidy(linCat)
+
+#look at fit results
+print(linCattable)
+
+# save fit results table  
+table_linCat = here("results", "resulttable1.rds")
+saveRDS(linCattable, file = table_linCat)
+```
+
+## Second model fit
+```{r}
+# Load required library
+library(strucchange)
+
+# Fit a linear regression model with treatment variables
+timeseries <- lm(BodyWeight ~ Week + I(Week^2) + I(Week^3) + Category, data = body_weights)
+
+# Summary of the model
+summary(timeseries)
+
+# place results from fit into a data frame with the tidy function
+timeseriestbl <- broom::tidy(timeseries)
+
+#look at fit results
+print(timeseriestbl)
+
+# save fit results table  
+seriestable_file2 = here("results", "resulttable2.rds")
+saveRDS(timeseriestbl, file = seriestable_file2)
+```
+## Third Model Fit
+```{r}
+# Define the recipe
+body_recipe <- recipe(BodyWeight ~ ., data = body_weights) %>%
+  step_dummy(all_nominal(), -all_outcomes()) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())
+```
+
+```{r}
+# Split the data into training and testing sets
+set.seed(123) # for reproducibility
+body_split <- initial_split(body_weights, prop = 0.8, strata = BodyWeight)
+body_train <- training(body_split)
+body_test <- testing(body_split)
+
+# Define the linear regression model specification
+linear_spec <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Create a workflow that incorporates the recipe and the model
+body_workflow <- workflow() %>%
+  add_model(linear_spec) %>%
+  add_recipe(body_recipe)
+```
+
+The initial_split function divides the dataset into training and testing
+sets. The prop argument specifies the proportion of the data to allocate
+to the training set (80% in this case), and the strata argument ensures
+that the split is stratified based on the outcome variable (Y), which
+helps maintain the balance of categories in both sets.
+
+The linear_reg function specifies the linear regression model.
+set_engine("lm") selects the linear model engine (ordinary least squares
+regression), and set_mode("regression") sets the mode of the model to
+regression, indicating that it predicts a continuous outcome (Y).
+
+The workflow function creates a modeling workflow. This workflow
+combines the preprocessing steps defined in the recipe with the
+specified model. The add_recipe function adds the recipe to the
+workflow, and the add_model function adds the linear regression model.
+
+```{r}
+body_weights$BodyWeight <- as.numeric(as.character(body_weights$BodyWeight))
+
+class(body_weights$BodyWeight)
+```
+
+```{r}
+# Fit the workflow to the training data
+body_fit <- fit(body_workflow, data = body_train)
+
+# Compute predictions on the testing data
+body_predictions <- predict(body_fit, new_data = body_test) %>%
+  bind_cols(body_test)
+```
+
+The fit function fits the workflow to the training data. This step
+applies the preprocessing steps defined in the recipe to the training
+data and then fits the linear regression model to the preprocessed data.
+
+The predict function generates predictions from the fitted model using
+the testing data. This step applies the preprocessing steps (from the
+recipe) to the testing data and then predicts the outcome variable (Y)
+using the fitted linear regression model.
+
+The metrics function computes evaluation metrics for the model
+predictions. Here, we calculate the root mean squared error (RMSE) and
+the R-squared value to assess the model's performance. The computed
+metrics are then extracted and stored in the variables all_rmse and
+all_r_squared, respectively.
+
+```{r}
+# Compute RMSE and R-squared for the model using all predictors
+all_metrics <- body_predictions %>%
+  metrics(truth = BodyWeight, estimate = .pred)
+
+all_rmse <- all_metrics %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+all_r_squared <- all_metrics %>%
+  filter(.metric == "rsq") %>%
+  pull(.estimate)
+```
+
+The metrics function computes evaluation metrics for the model
+predictions. Here, we calculate the root mean squared error (RMSE) and
+the R-squared value to assess the model's performance. The computed
+metrics are then extracted and stored in the variables all_rmse and
+all_r_squared, respectively.
+
+Finally, we print the computed RMSE and R-squared values to evaluate the
+model's performance. These metrics provide insights into how well the
+linear regression model fits the data and predicts the outcome variable.
+
+```{r}
+# Print RMSE and R-squared for the model using all predictors
+cat("Model using all predictors:\n")
+cat("RMSE:", all_rmse, "\n")
+cat("R-squared:", all_r_squared, "\n")
+
+body_predictions
+tidy(body_fit)
+```
+
+# Results
+The predictive model demonstrated favorable performance, with an RMSE of 1.564 and an R-squared value of 0.954. The low RMSE indicates minimal deviation between predicted and actual body weight values, suggesting the model's predictive accuracy. Furthermore, the high R-squared value indicates that the model explains approximately 95.4% of the variance in body weight, indicating strong explanatory power. Interpretation of model coefficients revealed insights into the relative importance of predictors in influencing body weight. interpretation may be necessary depending on the specific context and goals of the analysis.

@@ -1,33 +1,28 @@
 ---
-title: ""
-subtitle: ""
+title: "Exploring the Relationship Between β-carotene Levels, BCO1 Variants, and Atherosclerosis Progression through Data Analysis"
+subtitle: "Insights into Plasma Lipid Profiles and Immune Cell Dynamics for Cardiovascular Health"
 author: Mutsa Nyamuranga
-date: "02/01/2024"
+date: "`r Sys.Date()`"
 format:
   docx:
     toc: false
     number-sections: true
     highlight-style: github
-bibliography: ../assets/dataanalysis-references.bib
-csl: ../assets/apa.csl
+bibliography: ../../assets/dataanalysis-references.bib
+csl: ../../assets/apa.csl
 ---
 
-This uses MS Word as output format. [See here](https://quarto.org/docs/output-formats/ms-word.html) for more information. You can switch to other formats, like html or pdf. See [the Quarto documentation](https://quarto.org/) for other formats.
-
+```{r, echo=FALSE, message=FALSE}
+# load a few R packages
+library(here)
+library(knitr)
+```
 
 # Summary/Abstract
 
-
-
-
-
-	
-
-
 {{< pagebreak >}}
 
-
-# Introduction 
+# Introduction
 
 ## General Background Information
 
@@ -36,7 +31,8 @@ Atherosclerosis, a chronic inflammatory disease of the arterial wall, remains a 
 Several studies have demonstrated the beneficial effects of β-carotene in delaying atherosclerosis progression in experimental models, along with its association with reduced cardiovascular risk in humans. Moreover, genetic variants in the BCO1 gene, responsible for converting β-carotene to vitamin A, have been linked to alterations in circulating carotenoid levels and plasma lipid profiles in individuals. However, the precise mechanisms underlying these effects, particularly regarding the interplay between β-carotene, BCO1 activity, and atherosclerosis progression or resolution, remain unclear.
 
 ## Description of data and data source
-The data I will be using is based on: 
+
+The data I will be using is based on:
 
 Pinos, I., et al. (2024). "β-Carotene accelerates the resolution of atherosclerosis in mice." eLife 12: RP87430.
 
@@ -60,30 +56,23 @@ rawdata <- read_excel("~/Desktop/MADA-course/Nyamuranga-MADA-project/data/raw-da
 
 ## Questions/Hypotheses to be addressed
 
-  The question I want to answer using the data is whether there is a correlation between circulating β-carotene levels, BCO1 genetic variants, and the progression or resolution of atherosclerosis. Specifically, I am interested in examining how these factors relate to plasma lipid profiles (e.g., cholesterol, triglycerides) and immune cell populations, particularly Treg levels, in individuals with atherosclerosis. 
-  The main outcome of interest will be the degree of atherosclerosis progression or resolution, potentially measured by imaging techniques or clinical assessments of plaque burden. Additionally, plasma lipid profiles and immune cell populations, particularly Treg levels, would be of interest as secondary outcomes. The specific predictors of interest would include circulating β-carotene levels, genetic variants associated with BCO1 activity, plasma lipid profiles, and immune cell populations.
-  The data analysis will likely involve statistical methods such as correlation analysis to assess the relationships between predictors and outcomes. Regression modeling could be used to examine the predictive value of circulating β-carotene levels and BCO1 genetic variants on atherosclerosis progression or resolution, controlling for potential confounding variables. Further exploration may involve visualization techniques to identify patterns and trends in the data.
-
-
+The question I want to answer using the data is whether there is a correlation between circulating β-carotene levels, BCO1 genetic variants, and the progression or resolution of atherosclerosis. Specifically, I am interested in examining how these factors relate to plasma lipid profiles (e.g., cholesterol, triglycerides). The main outcome of interest will be the degree of atherosclerosis progression or resolution, potentially measured by imaging techniques or clinical assessments of plaque burden. Additionally, plasma lipid profiles and immune cell populations, particularly Treg levels, would be of interest as secondary outcomes. The specific predictors of interest would include circulating β-carotene levels, genetic variants associated with BCO1 activity, plasma lipid profiles, and immune cell populations. The data analysis will likely involve statistical methods such as correlation analysis to assess the relationships between predictors and outcomes. Regression modeling could be used to examine the predictive value of circulating β-carotene levels and BCO1 genetic variants on atherosclerosis progression or resolution, controlling for potential confounding variables. Further exploration may involve visualization techniques to identify patterns and trends in the data.
 
 {{< pagebreak >}}
 
-
-# Methods 
-
+# Methods
 
 ## Data aquisition
-The data was acquired online from Pinos et. al. in the additional files section. The data was formated in tables within an excel file which had to be processed and cleaned to identify target data. The excel file was loaded in through readxl and downloaded into a processing quarto file. 
 
+The data was acquired online from Pinos et. al. in the additional files section. The data was formated in tables within an excel file which had to be processed and cleaned to identify target data. The excel file was loaded in through readxl and downloaded into a processing quarto file.
 
 ## Data import and cleaning
 
-The provided R code is structured to process and clean raw data extracted from an Excel file. Initially, the data is loaded into R using the read_excel function, and a specific range of cells is extracted from the Excel sheet "Figure 1-suppl figure 1". The subsequent cleaning steps involve removing columns containing standard deviation data and ensuring clarity and consistency by labeling conditions with "Female" and "Male" appropriately. Following this, basic exploration functions such as print, str, summary, and glimpse are utilized to examine the cleaned data frame's structure and content. Finally, the cleaned data is saved as an RDS file for future analysis. 
-
+The provided R code is structured to process and clean raw data extracted from an Excel file. Initially, the data is loaded into R using the read_excel function, and a specific range of cells is extracted from the Excel sheet "Figure 1-suppl figure 1". The subsequent cleaning steps involve removing columns containing standard deviation data and ensuring clarity and consistency by labeling conditions with "Female" and "Male" appropriately. Following this, basic exploration functions such as print, str, summary, and glimpse are utilized to examine the cleaned data frame's structure and content. Finally, the cleaned data is saved as an RDS file for future analysis.
 
 ## Statistical analysis
 
-```{r load_image, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
+```{r load_image_1, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
 library(png)
 condimage <- readPNG(here("results", "figures", "condition_distro.png"))
 par(mar = c(1, 1, 1, 1))
@@ -91,7 +80,7 @@ plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
 rasterImage(condimage, 0.1, 0.1, 0.9, 0.9)  
 ```
 
-```{r load_image, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
+```{r load_image_2, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
 library(png)
 catimage <- readPNG(here("results", "figures", "category_distro.png"))
 par(mar = c(1, 1, 1, 1))
@@ -101,16 +90,11 @@ rasterImage(catimage, 0.1, 0.1, 0.9, 0.9)
 
 {{< pagebreak >}}
 
-
 # Results
 
 ## Exploratory/Descriptive analysis
 
-
-
-
 @tbl-summarytable shows a summary of the data.
-
 
 ```{r}
 #| label: tbl-summarytable
@@ -120,10 +104,7 @@ summarytable = readRDS(here("results","tables","summarytable.rds"))
 knitr::kable(summarytable)
 ```
 
-
-
 ## Basic statistical analysis
-
 
 ## Full analysis
 
@@ -134,6 +115,7 @@ knitr::kable(summarytable)
 resulttable1 = readRDS(here("results","output","resulttable1.rds"))
 knitr::kable(resulttable1)
 ```
+
 Linear Regression: The results reveal the estimated effects of different treatment categories on the response variable, body weight, along with their statistical significance. The intercept, estimated at 25.0, represents the baseline level of the response variable when all predictors are zero. Relative to a reference category, presumably "BaselineM", coefficients associated with each treatment category provide insights into their effects on the response variable. For instance, "BaselineM" and "BetaCaroM" are associated with increases in the response variable by approximately 8.63 and 9.85 units, respectively, compared to the reference category. Conversely, "BetaCaroteneF", "ControlF", and "ControlM" exhibit smaller or even negative effects, but the statistical significance varies among these categories, with "BetaCaroteneF" showing a non-significant effect and others demonstrating statistically significant effects with low p-values.
 
 ```{r}
@@ -148,33 +130,30 @@ Time Series Model: The linear regression model was constructed to investigate th
 
 Furthermore, the model uncovered notable effects of treatment variables on body weight. Specifically, compared to the reference level "BaselineM", various treatment categories exhibited significant impacts on body weight. For instance, "BetaCaroM" and "ControlM" categories were associated with increased body weight by 8.6331 and 8.1861 units, respectively, compared to "BaselineM". Conversely, "BetaCaroteneF" and "ControlF" categories were associated with decreases in body weight by 1.5694 and 1.0445 units, respectively, compared to "BaselineM". These findings collectively suggest that both time and treatment variables play crucial roles in influencing body weight variations over the observed period.
 
-
 {{< pagebreak >}}
-
 
 # Discussion
 
 ## Summary and Interpretation
-_Summarize what you did, what you found and what it means._
+
+*Summarize what you did, what you found and what it means.*
 
 ## Strengths and Limitations
-_Discuss what you perceive as strengths and limitations of your analysis._
+
+*Discuss what you perceive as strengths and limitations of your analysis.*
 
 ## Conclusions
-_What are the main take-home messages?_
 
-_Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end_
+*What are the main take-home messages?*
 
-This paper [@leek2015] discusses types of analyses. 
+*Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end*
 
-These papers [@mckay2020; @mckay2020a] are good examples of papers published using a fully reproducible setup similar to the one shown in this template. 
+This paper [@leek2015] discusses types of analyses.
+
+These papers [@mckay2020; @mckay2020a] are good examples of papers published using a fully reproducible setup similar to the one shown in this template.
 
 Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal [are available](https://www.zotero.org/styles). You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like, I just used the generic word `references.bib` but giving it a more descriptive name is probably better.
-
 
 {{< pagebreak >}}
 
 # References
-
-
-
