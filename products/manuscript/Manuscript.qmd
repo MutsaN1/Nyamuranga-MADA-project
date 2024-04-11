@@ -16,6 +16,8 @@ csl: ../../assets/apa.csl
 # load a few R packages
 library(here)
 library(knitr)
+library(tidyr)
+library(broom)
 ```
 
 # Summary/Abstract
@@ -48,10 +50,10 @@ library(skimr) #for nice visualization of data
 library(here) #to set paths
 
 # Load necessary package
-library(readxl)
-
-# Read Excel file
-rawdata <- read_excel("~/Desktop/MADA-course/Nyamuranga-MADA-project/data/raw-data/elife-87430-data1-v1.xlsx")
+# path to data
+# note the use of the here() package and not absolute paths
+data_location <- here::here("data/raw-data/elife-87430-data1-v1.xlsx")
+rawdata <- readxl::read_excel(data_location)
 ```
 
 ## Questions/Hypotheses to be addressed
@@ -62,11 +64,11 @@ The question I want to answer using the data is whether there is a correlation b
 
 # Methods
 
-## Data aquisition
+## Data Acquisition
 
 The data was acquired online from Pinos et. al. in the additional files section. The data was formated in tables within an excel file which had to be processed and cleaned to identify target data. The excel file was loaded in through readxl and downloaded into a processing quarto file.
 
-## Data import and cleaning
+## Data Import and Cleaning
 
 The provided R code is structured to process and clean raw data extracted from an Excel file. Initially, the data is loaded into R using the read_excel function, and a specific range of cells is extracted from the Excel sheet "Figure 1-suppl figure 1". The subsequent cleaning steps involve removing columns containing standard deviation data and ensuring clarity and consistency by labeling conditions with "Female" and "Male" appropriately. Following this, basic exploration functions such as print, str, summary, and glimpse are utilized to examine the cleaned data frame's structure and content. Finally, the cleaned data is saved as an RDS file for future analysis.
 
@@ -87,6 +89,18 @@ par(mar = c(1, 1, 1, 1))
 plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
 rasterImage(catimage, 0.1, 0.1, 0.9, 0.9)  
 ```
+
+### Time Series Regression Analysis
+A time series regression analysis was conducted to investigate temporal trends and relationships between variables over time. The time series data were examined for stationarity and seasonality using appropriate statistical tests. The primary variables of interest were body weight over weeks. A linear regression model was fitted to the time series data to quantify the relationship between the predictor variables and the outcome variable over the study period. Model diagnostics, including residual analysis and goodness-of-fit measures, were performed to assess model adequacy.
+
+### Basic Linear Regression Analysis
+A basic linear regression analysis was performed to examine the association between predictor variables and the outcome variable. The predictor variables included control, baseline and beta-carotene, while the outcome variable was body weight. Prior to analysis, multicollinearity diagnostics were conducted to identify and mitigate issues arising from collinear predictor variables. The linear regression model was fitted to the data, and model assumptions were assessed through residual analysis and goodness-of-fit tests.
+
+### Train/Test Linear Regression Analysis
+To assess the generalizability and predictive performance of the linear regression model, a train/test approach was employed. The dataset was randomly divided into a training set (80% of the data) and a testing set (remaining 20 of the data). The linear regression model was fitted to the training set, and model performance was evaluated using the testing set. Performance metrics such as mean squared error (MSE) and R-squared were calculated to assess the predictive accuracy of the model.
+
+### Statistical Software
+All statistical analyses were conducted using [name of statistical software or programming language, e.g., R, Python]. Statistical significance was determined at the conventional alpha level of 0.05.
 
 {{< pagebreak >}}
 
@@ -130,13 +144,24 @@ Time Series Model: The linear regression model was constructed to investigate th
 
 Furthermore, the model uncovered notable effects of treatment variables on body weight. Specifically, compared to the reference level "BaselineM", various treatment categories exhibited significant impacts on body weight. For instance, "BetaCaroM" and "ControlM" categories were associated with increased body weight by 8.6331 and 8.1861 units, respectively, compared to "BaselineM". Conversely, "BetaCaroteneF" and "ControlF" categories were associated with decreases in body weight by 1.5694 and 1.0445 units, respectively, compared to "BaselineM". These findings collectively suggest that both time and treatment variables play crucial roles in influencing body weight variations over the observed period.
 
+```{r}
+#| label: Full Model Fit
+#| tbl-cap: "Full model fit table."
+#| echo: FALSE
+resulttable3 = readRDS(here("results","output","resulttable3.rds"))
+
+print(resulttable3)
+```
+The predictive model demonstrated favorable performance, with an RMSE of 1.564 and an R-squared value of 0.954. The low RMSE indicates minimal deviation between predicted and actual body weight values, suggesting the model's predictive accuracy. Furthermore, the high R-squared value indicates that the model explains approximately 95.4% of the variance in body weight, indicating strong explanatory power. Interpretation of model coefficients revealed insights into the relative importance of predictors in influencing body weight.
+
+The results highlight the effectiveness of the predictive model in capturing the relationship between predictors and body weight. The preprocessing steps, including dummy encoding, centering, and scaling, played a crucial role in enhancing model performance by standardizing and transforming predictors. The high explanatory power of the model suggests that the included predictors effectively explain variations in body weight. 
+
 {{< pagebreak >}}
 
 # Discussion
 
 ## Summary and Interpretation
 
-*Summarize what you did, what you found and what it means.*
 
 ## Strengths and Limitations
 

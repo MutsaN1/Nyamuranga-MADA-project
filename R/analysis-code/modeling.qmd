@@ -131,9 +131,9 @@ specified model. The add_recipe function adds the recipe to the
 workflow, and the add_model function adds the linear regression model.
 
 ```{r}
-body_weights$BodyWeight <- as.numeric(as.character(body_weights$BodyWeight))
+body_train$BodyWeight <- as.numeric(as.character(body_train$BodyWeight))
 
-class(body_weights$BodyWeight)
+class(body_train$BodyWeight)
 ```
 
 ```{r}
@@ -143,6 +143,8 @@ body_fit <- fit(body_workflow, data = body_train)
 # Compute predictions on the testing data
 body_predictions <- predict(body_fit, new_data = body_test) %>%
   bind_cols(body_test)
+
+body_predictions$BodyWeight <- as.numeric(as.character(body_predictions$BodyWeight))
 ```
 
 The fit function fits the workflow to the training data. This step

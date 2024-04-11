@@ -83,7 +83,6 @@ See here for some suggestions on how to store your processed data:
 http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
 
 ```{r}
-dir.create("/Users/mutsa_n/Desktop/MADA-course/Nyamuranga-MADA-project/data/processed_data/", recursive = TRUE)
 save_data_location <- here::here("data","processed_data","processeddata.rds")
 saveRDS(figdata, file = save_data_location)
 ```
