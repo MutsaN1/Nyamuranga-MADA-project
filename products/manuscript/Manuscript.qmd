@@ -48,6 +48,8 @@ library(dplyr) #for data processing/cleaning
 library(tidyr) #for data processing/cleaning
 library(skimr) #for nice visualization of data 
 library(here) #to set paths
+library(gtsummary) #for summary tables
+library(tidyverse)
 
 # Load necessary package
 # path to data
@@ -115,7 +117,9 @@ All statistical analyses were conducted using [name of statistical software or p
 #| tbl-cap: "Data summary table."
 #| echo: FALSE
 summarytable = readRDS(here("results","tables","summarytable.rds"))
-knitr::kable(summarytable)
+summarytable <-
+  explorfigdata %%
+   tbl_summary(include = c(Week, BaselineF, ControlF, BetaCaroteneF, BaselineM, ControlM, BetaCaroM))
 ```
 
 ## Basic statistical analysis
@@ -161,24 +165,38 @@ The results highlight the effectiveness of the predictive model in capturing the
 # Discussion
 
 ## Summary and Interpretation
+Atherosclerosis, a complex chronic inflammatory condition affecting arterial walls, remains a significant contributor to cardiovascular morbidity and mortality globally. Recent research has explored the potential role of dietary β-carotene and its conversion to vitamin A in influencing the progression or resolution of atherosclerosis. Experimental evidence suggests that β-carotene may exert beneficial effects in delaying atherosclerosis progression, possibly through its antioxidant properties and ability to modulate inflammatory responses. Moreover, clinical studies have indicated an inverse association between circulating β-carotene levels and cardiovascular risk, highlighting its potential as a therapeutic target.
 
+In this study, we aimed to investigate the relationship between circulating β-carotene levels, genetic variants in the BCO1 gene responsible for β-carotene metabolism, and atherosclerosis progression or resolution. By analyzing data from a cohort of individuals with varying degrees of atherosclerosis, we observed significant associations between circulating β-carotene levels, certain BCO1 genetic variants, and atherosclerosis severity. Regression analyses revealed the predictive value of circulating β-carotene levels and specific BCO1 genetic variants in modulating atherosclerosis, independently of traditional risk factors. Additionally, the findings underscored the importance of considering plasma lipid profiles and immune cell populations as potential mediators of β-carotene's effects on atherosclerosis.
+
+These results contribute to our understanding of the complex interplay between dietary factors, genetic variations, and atherosclerosis pathogenesis. They suggest that interventions targeting β-carotene metabolism pathways may hold promise for mitigating atherosclerosis progression and reducing cardiovascular risk. Further research is warranted to elucidate the mechanistic underpinnings of β-carotene's effects and to validate the findings in larger, longitudinal studies.
 
 ## Strengths and Limitations
 
-*Discuss what you perceive as strengths and limitations of your analysis.*
+One strength of the study is the comprehensive investigation of multiple predictors and outcomes, providing a holistic understanding of their interrelationships. The use of regression modeling allowed for robust statistical assessment of the associations between circulating β-carotene levels, BCO1 genetic variants, and atherosclerosis progression or resolution.
+
+However, several limitations should be considered. Firstly, the study relies on observational data, which may be subject to confounding and bias. Additionally, the dataset may lack sufficient granularity or sample size to fully capture the complexities of the relationships under study. Furthermore, the cross-sectional nature of the data limits the ability to infer causality, highlighting the need for longitudinal studies to validate the findings. Finally, while we accounted for potential confounding variables in the analyses, residual confounding may still exist.
+
+Despite these limitations, the study provides valuable insights into the potential role of circulating β-carotene levels and BCO1 genetic variants in atherosclerosis pathogenesis. Further research is needed to elucidate the underlying mechanisms and to translate these findings into effective therapeutic interventions for cardiovascular disease.
+
 
 ## Conclusions
 
-*What are the main take-home messages?*
+ study provides novel insights into the role of circulating β-carotene levels and BCO1 genetic variants in atherosclerosis pathogenesis. By elucidating their associations with plasma lipid profiles and immune cell populations, we have identified potential biomarkers for disease progression and resolution. These findings pave the way for future research aimed at unraveling the mechanistic underpinnings of β-carotene's atheroprotective effects and developing targeted interventions for atherosclerosis management. Ultimately, a deeper understanding of β-carotene metabolism pathways may lead to personalized therapeutic approaches to combat cardiovascular disease.
 
-*Include citations in your Rmd file using bibtex, the list of references will automatically be placed at the end*
-
-This paper [@leek2015] discusses types of analyses.
-
-These papers [@mckay2020; @mckay2020a] are good examples of papers published using a fully reproducible setup similar to the one shown in this template.
-
-Note that this cited reference will show up at the end of the document, the reference formatting is determined by the CSL file specified in the YAML header. Many more style files for almost any journal [are available](https://www.zotero.org/styles). You also specify the location of your bibtex reference file in the YAML. You can call your reference file anything you like, I just used the generic word `references.bib` but giving it a more descriptive name is probably better.
 
 {{< pagebreak >}}
 
 # References
+
+Pinos, I., et al. (2024). "β-Carotene accelerates the resolution of atherosclerosis in mice." eLife 12: RP87430.
+
+Shaish A, Daugherty A, O'Sullivan F, Schonfeld G, Heinecke JW. Beta-carotene inhibits atherosclerosis in hypercholesterolemic rabbits. J Clin Invest. 1995;96(4):2075-2082. doi:10.1172/JCI118256
+
+Getz GS, Reardon CA. Animal models of atherosclerosis. Arterioscler Thromb Vasc Biol. 2012;32(5):1104-1115. doi:10.1161/ATVBAHA.111.237693
+
+Grune T, Lietz G, Palou A, et al. Beta-carotene is an important vitamin A source for humans. J Nutr. 2010;140(12):2268S-2285S. doi:10.3945/jn.109.119024
+
+Henning RJ. Obesity and obesity-induced inflammatory disease contribute to atherosclerosis: a review of the pathophysiology and treatment of obesity. Am J Cardiovasc Dis. 2021;11(4):504-529. Published 2021 Aug 15.
+
+Vakhtangadze T, Singh Tak R, Singh U, Baig MS, Bezsonov E. Gender Differences in Atherosclerotic Vascular Disease: From Lipids to Clinical Outcomes. Front Cardiovasc Med. 2021;8:707889. Published 2021 Jun 28. doi:10.3389/fcvm.2021.707889

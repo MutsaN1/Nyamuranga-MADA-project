@@ -97,5 +97,5 @@ These papers [@mckay2020; @mckay2020a] are good examples of papers published usi
 
 # References
 
-
+Pinos, I., et al. (2024). "β-Carotene accelerates the resolution of atherosclerosis in mice." eLife 12: RP87430.
 

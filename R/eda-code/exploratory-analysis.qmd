@@ -26,16 +26,26 @@ figdata <- here::here("data","processed_data","processeddata.rds")
 explorfigdata <- readRDS(figdata)
 ```
 
+```{r}
+explorfigdata
+```
+
 # Data exploration through tables
 
 Showing a bit of code to produce and save a summary table.
 
 ```{r}
-summary_explorfigdata = skimr::skim(explorfigdata)
-print(summary_explorfigdata)
+print(explorfigdata)
+
+summary_table <- explorfigdata %>%
+  tbl_summary() %>%
+  add_stat(label = "Count", statistic = list(all_continuous() ~ "{n}")) %>%
+  add_stat(label = "Mean", statistic = list(all_continuous() ~ "{mean}"))
+```
+
 # save to file
 summarytable_elife = here("results", "summarytable.rds")
-saveRDS(summary_explorfigdata, file = summarytable_elife)
+saveRDS(explorfigdata, file = summarytable_elife)
 ```
 
 We are saving the results to the `results` folder. Depending on how many tables/figures you have, it might make sense to have separate folders for each. And/or you could have separate folders for exploratory tables/figures and for final tables/figures. Just choose a setup that makes sense for your project and works for you, and provide enough documentation that someone can understand what you are doing.
