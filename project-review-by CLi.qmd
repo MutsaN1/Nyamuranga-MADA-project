@@ -1,0 +1,186 @@
+---
+title: Project Review Part 5 
+author: Chaohua Li
+date: 04-25-2024
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Overview
+
+Title of project: Exploring the Relationship Between β-carotene Levels, BCO1 Variants, and Atherosclerosis Progression through Data Analysis
+
+Name of project author(s): Mutsa Nyamuranga
+
+Name of project reviewer: Chaohua Li
+
+
+# Instructions
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+The background needs to be more detailed. It would also be helpful with some citations added. 
+
+### Summary assessment (PICK ONE, DELETE THE OTHERS)
+
+* some contextualization and motivation
+
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+
+The research question was clearly stated and explained. 
+
+### Summary assessment
+
+* question/hypotheses fully clear
+
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+Data source was clearly described. There was no codebook provided.   
+
+### Summary assessment
+
+* source and overall structure of data well explained
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+Data was well processed. Detailed comments/notes were provided for all procedures.
+There was no supplementary material. The supplement qmd file in the 'manuscript' folder was from the template file. 
+
+### Summary assessment
+
+* some weaknesses in wrangling and exploratory component
+
+
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+The analysis methods were appropriate for the question to be answered. Cross-validation was not used for performance evaluation. But the performance of the final was assessed on a test dataset. 
+
+### Summary assessment
+
+* strong and reasonable analysis
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+The results were presented in a well-structured manner. Most tables were well-formated. Maybe Table 1(summary of data) should be made more concise or moved into a supplemental material. 
+
+### Summary assessment
+
+* results are very well presented
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+Discussion is detailed and the interpretation of results is appropriate. Strengths and limitations are specified. 
+
+### Summary assessment
+
+* strong, complete and clear discussion
+
+
+
+## Further comments
+
+There are some R scripts showing up in the manuscript. And some residual content of the template needs to be removed. It would be helpful if the detailed titles/annotations can be added to the figures.  
+
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+The project is generally well-structured. All files are in well labeled folders. It is easy to figure out the use for each file/folder. 
+
+### Summary assessment
+
+* well structured
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+The R scripts are well-documented with sufficient description. Each decision of analysis was justified and explained. There are residual content from template in many Rmd files(README). The qmd file for supplement material is also from the template. 
+
+### Summary assessment
+
+* decently documented with some gaps
+
+
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+I was able reproduce the results. Instructions were clear.
+
+
+### Summary assessment
+
+* fully reproducible without issues
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+The research questions have been fully addressed. All sections are relatively complete and thorough.
+
+### Summary assessment
+
+* strong level of thorougness
+
+
+
+## Further comments
+
+Overall, this study is in good shape. The author may want to consider moving some content into a supplement file. Some R scripts show up in the manuscript, so that needs to be fixed. The residual content from template in many Rmd files also need to be cleaned.  
+
+
+
+
+
