@@ -1,0 +1,170 @@
+---
+title: "Rachel Robertson Project Review"
+author: "Rachel Robertson"
+date: 4-26-24
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Overview
+
+Title of project: "Exploring the Relationship Between β-carotene Levels, BCO1 Variants, and Atherosclerosis Progression through Data Analysis"
+
+Name of project author(s): Mutsa Nyamuranga
+
+Name of project reviewer: Rachel Robertson
+
+# Specific project content evaluation
+
+## Background, Context and Motivation
+>How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+I think the background of the project is described in a clear and concise manner, but you may also consider adding statistics about atherosclerosis, and its prevalence, to strengthen your rationale for your study.
+
+The previous study, from which the data came from, could be elaborated on a bit more. Why did they conduct this study with mice? Is this an initial test for drug candidacy or has beta-carotene made it into human clinical trials?
+
+### Summary assessment (PICK ONE, DELETE THE OTHERS)
+
+* some contextualization and motivation
+
+## Question description
+>How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+
+I understand your research question of addressing how these factors are correlated with atherosclerosis progression, but I am curious about what your rationale for choosing this question is. Is this correlation yet to be addressed in literature? Is there applicability to future clinical trials?
+
+I would also suggest rewording the last few sentences of your Questions/Hypothesis section to sound more absolute in the method of analysis you will use (or instead just talk about analysis method in the methods). 
+
+### Summary assessment
+
+* question/hypotheses fully clear
+
+## Data description
+>How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+I understand that the data came from an animal trial, using mice, but I do not understand much other context about the data. However, I do see that the source is mentioned. I would recommend going into more detail about how the animal trials were conducted and how the meaasurements for each indicator were collected.
+
+I do not see a codebook for your variables of interest. Does your data source include a codebook or will you include a codebook in your readme file under the R folder?
+
+### Summary assessment
+
+* source and overall structure of data somewhat explained
+
+## Data wrangling and exploratory analysis
+>How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+I think that some of the cleaning steps could use additional rationale in the code file. For example, what was your rationale for not getting rid of missing values? I know sometimes it's not the best, but for your data, is there a reason to keep missing values?
+
+I also saw an interesting trend in your EDA. What might be the reason that the sum of body weights for baseline males and females is the lowest, but they are not the lowest in the line graph of total body weight over time?
+
+### Summary assessment
+
+* some weaknesses in wrangling and exploratory component
+
+## Appropriateness of Analysis
+>Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+I think you can be a little bit more specific with what effects you are talking about for each category, in the linear fit results section.For example, it would make it more clear to list out each variable and explain their effect on the response, noting the variables with the larger p-values (but without invalidating them, because they likely still have importance).
+
+What is the rationale behind your choice of analysis method? Why did you choose to use a linear regression and a time series regression to analyze body weight? Were there not many outlines and a normal distribution for the variables of interest? How did the linear model and time series models perform compared to one another?
+
+### Summary assessment
+
+* defensible but not optimal analysis 
+
+## Presentation
+>How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+One of the EDA figures, total weight for conditions, is displayed twice in your manuscript. I think you may want to delete one of these. You may also consider changing the colors or font of this graph. I would also recommend rearranging the order of the factors in the legend part of the graph, so all male and female variables are grouped together.
+
+I also think it might be useful to get rid of some of the code in the manuscript, and replace it with just the summary tables or specific output (in table or figure form), that you want to display.
+
+### Summary assessment
+
+* results are presented ok, with room for improvement
+
+## Discussion/Conclusions
+>Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+The discussion has not been edited, but the final paragraph of the results sounds like the beginnings of a discussion. You might want to move this and continue to elaborate upon it in the discussion section.
+
+### Summary assessment
+
+* major parts of discussion missing or wrong 
+
+## Further comments
+
+You might want to consider trying another analysis method to examine whether it performs better. For example, you might see if a GAm gives you similar results to the linear regression.Although, the main thing you should focus on is finishing and fleshing out the manuscript.
+
+# Overall project content evaluation
+
+## Structure
+>Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+The project is organized into folders, but I found the readme files to be unhelpful. The main README file should be updated to explain what is in all of your folders and in what order to run the code. The readme in raw-data, the readme(s) in the main R folder and all of the analysis sub-folders, and in the readme in the results folder and sub-folders should be updated to reflect what is contained in them.
+
+The results folder is a bit unorganized, with tables and figures in the main folder, as well as sub-folders. Make sure that your save paths are correct and delete the files saved int he incorrect place.
+
+Under the products/ manuscript folder, the supplementary material may be updated.
+
+### Summary assessment
+
+* poor and confusing structure
+
+## Documentation 
+>How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+Most of the code was well explained and documented with comments in the chunks as well as between chunks. There were, however, a few exceptions:
+Some chunks of code in EDA and processing do not specify the purpose of the code. I think it would be helpful to add explanations in your lines of code with a "#" to describe what the functions do.
+
+### Summary assessment
+
+* decently documented with some gaps
+
+## Reproducibility
+>Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+The cleaning code worked fine for me, but the exploratory data analysis did not. First I had to open the gtsummary library to get the add_stat function, but after this it said you are missing an argument (fns=) in the add_stat function. I was not able to add the argument and fix it, but it should be specified according to type of statistic you are looking to add to your table. I also had trouble rendering your manuscript because it was not able to pull the summary table (because of the previous error in the eda code the summary table data was not produced). Instead, I opened your manuscript docx.
+
+The rest of the EDA and the analysis code worked well and was easily reproducible for me!
+
+
+### Summary assessment
+
+* small parts not reproducible or required manual intervention 
+
+## Thoroughness
+>How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+I do see a linear regression model used with TidyModel considered, but no further models.Was the time series model produced in the eda-code file?
+
+Two models were considered, but the rationale for considering these is not sufficiently explained. It would be useful to look at alternative ways to model the data to find the most important predictor of your outcome. I like using the vip package for finding the most important variables using the ml models. I would consider looking into this and also testing out another similar model that makes sense with your data, like a RF regression model or a GAM.
+
+### Summary assessment
+
+* weak level of thoroughness

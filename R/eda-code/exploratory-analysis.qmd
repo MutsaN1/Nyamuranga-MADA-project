@@ -15,6 +15,7 @@ library(skimr)
 library(ggplot2)
 library(tidyr)
 library(forcats)
+library(gtsummary) #line added by Rachel for add_stat function to work
 ```
 
 Load the data.
@@ -43,10 +44,13 @@ summary_table <- explorfigdata %>%
   add_stat(label = "Mean", statistic = list(all_continuous() ~ "{mean}"))
 ```
 
+
+```{r}
 # save to file
 summarytable_elife = here("results", "summarytable.rds")
 saveRDS(explorfigdata, file = summarytable_elife)
 ```
+
 
 We are saving the results to the `results` folder. Depending on how many tables/figures you have, it might make sense to have separate folders for each. And/or you could have separate folders for exploratory tables/figures and for final tables/figures. Just choose a setup that makes sense for your project and works for you, and provide enough documentation that someone can understand what you are doing.
 
