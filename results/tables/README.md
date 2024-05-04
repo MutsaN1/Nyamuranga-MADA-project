@@ -1,3 +1,12 @@
 Folder for all tables (generally stored as Rds files)
 
-You can create further sub-folders if that makes sense.
+Here are the ReadMe files for all tables created.
+
+The contents include:
+
+resulttable1.rds
+resulttable2.rds
+summarytable.rds
+resulttable3.rds
+
+Each of which is displayed on the Manuscript

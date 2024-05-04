@@ -21,38 +21,61 @@ library(gtsummary) #line added by Rachel for add_stat function to work
 Load the data.
 
 ```{r}
-#Path to data. Note the use of the here() package and not absolute paths
+#Path to data.
 figdata <- here::here("data","processed_data","processeddata.rds")
 #load data
 explorfigdata <- readRDS(figdata)
-```
-
-```{r}
-explorfigdata
 ```
 
 # Data exploration through tables
 
 Showing a bit of code to produce and save a summary table.
 
-```{r}
-print(explorfigdata)
 
-summary_table <- explorfigdata %>%
-  tbl_summary() %>%
-  add_stat(label = "Count", statistic = list(all_continuous() ~ "{n}")) %>%
-  add_stat(label = "Mean", statistic = list(all_continuous() ~ "{mean}"))
+
+```{r}
+# Calculate count and mean statistics
+explorfigdata <- mutate_all(explorfigdata, as.numeric)
+# Calculate count statistics
+summary_stats <- explorfigdata %>%
+  summarise(across(starts_with(c("Baseline", "Control", "BetaCaro")), list(Count = ~sum(!is.na(.))), .names = "{.col}_{.fn}"))
+
+# Reshape the data for better presentation
+summary_table <- summary_stats %>%
+  pivot_longer(everything(), names_to = c(".value", "Variable"), names_sep = "_")
+# Print the summary table
+print(summary_table)
 ```
 
+This table displays the counts of data per week. Where 16 would represent the number of weeks were data was collected for the Baseline variable mice. 
 
 ```{r}
 # save to file
-summarytable_elife = here("results", "summarytable.rds")
-saveRDS(explorfigdata, file = summarytable_elife)
+summary_table = here("results", "summarytable1.rds")
+saveRDS(explorfigdata, file = summary_table)
 ```
 
+```{r}
+body_weights <- pivot_longer(explorfigdata, -Week, names_to = "Category", values_to = "BodyWeight")
 
-We are saving the results to the `results` folder. Depending on how many tables/figures you have, it might make sense to have separate folders for each. And/or you could have separate folders for exploratory tables/figures and for final tables/figures. Just choose a setup that makes sense for your project and works for you, and provide enough documentation that someone can understand what you are doing.
+summary_table2 <-
+  tbl_summary(
+    body_weights,
+    by = Category,
+    missing = "no" # don't list missing data separately
+  ) %>%
+  add_n() %>% # add column with total number of non-missing observations
+  modify_header(label = "**Variable**") %>% # update the column header
+  bold_labels()
+
+summary_table2
+
+# save to file
+summarytable_elife = here("results", "summarytable.rds")
+saveRDS(summary_table2, file = summarytable_elife)
+```
+
+With some final exploration. We look at the change in body weight over the 16 weeks. We see that males start and finish with higher body weights as expected. Of note, we see that the control and Beta-Carotene condition for female mice ends with the lowest body weights.
 
 # Data exploration through figures
 
@@ -84,7 +107,7 @@ bar1 <- ggplot(explorfigdata_long, aes(x = fct_reorder(condition, desc(sum_value
 
 plot(bar1)
 # Saving the plot as an image file
-figure_file = here("results","condition_distro.png")
+figure_file = here("results","condition_distro1.png")
 ggsave(filename = figure_file, plot=bar1) 
 ```
 
@@ -92,7 +115,7 @@ I color coded for male and female stratified conditions. Here, we see that the b
 
 ## Weight over time
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 # Reshape data to long format
 library(tidyr)
 body_weights_long <- pivot_longer(explorfigdata, -Week, names_to = "Category", values_to = "BodyWeight")
@@ -102,13 +125,15 @@ str(body_weights_long)
 
 # Plot the data
 library(ggplot2)
-ggplot(body_weights_long, aes(x = Week, y = BodyWeight, color = Category)) +
+line1 <- ggplot(body_weights_long, aes(x = Week, y = BodyWeight, color = Category)) +
   geom_line() +
   labs(title = "Comparison of Body Weight Changes Across Categories",
        x = "Week", y = "Body Weight") +
   theme_minimal()
-figure_file2 = here("results", "figures", "category_distro.png")
-ggsave(filename = figure_file2, plot=bar1) 
-```
 
-With some final exploration. We look at the change in body weight over the 16 weeks. We see that males start and finish with higher body weights as expected. Of note, we see that the control and Beta-Carotene condition for female mice ends with the lowest body weights.
+plot(line1)
+
+figure_file2 = here("results", "figures", "category_distro.png")
+ggsave(filename = figure_file2, plot= line1) 
+```
+The line graph of total body weight over time reflects changes in body weight across different time points. Even if the sum of baseline body weights is lower, the trend over time may show an increase or decrease in body weight that is not evident when only considering the sum of baseline weights.

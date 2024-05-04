@@ -1,0 +1,181 @@
+---
+title: Project Review Template 
+author: Patrick Kaggwa
+date: 4-25-2024
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+---
+
+# Overview
+
+Title of project:Exploring the Relationship Between β-carotene Levels, BCO1 Variants, and Atherosclerosis Progression through Data Analysis (Insights into Plasma Lipid Profiles and Immune Cell Dynamics for Cardiovascular Health)
+
+
+Name of project author(s): Mutsa Nyamuranga
+
+Name of project reviewer: Patrick Kaggwa
+
+
+# Instructions
+
+Write your comments and feedback below for each section/component of the project. The goal should be to help the author improve their project. Make comments as constructive and actionable as possible. You can provide both criticism and praise.
+
+For each component, pick one summary statement by deleting the ones that do not apply and keeping only the one that you think most closely summarizes a given component. 
+
+Make sure your final document compiles/renders into a readable, well-formatted html document.
+
+Delete any sections/text of this template that are not part of your final review document. (Including these instructions.)
+
+
+# Specific project content evaluation
+Evaluate the different parts of the project by filling in the sections below.
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+Overall, background demonstrates a strong contextualization of the research within the existing literature and a clear motivation for the study. Though the text is missing some references. 
+
+### Summary assessment (PICK ONE, DELETE THE OTHERS)
+
+* strong contextualization and motivation
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+### Feedback and Comments
+
+Overall, the questions and hypotheses are well-defined and directly relate to the data, providing a clear framework for the analysis and interpretation of results
+
+### Summary assessment
+
+* question/hypotheses fully clear
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+The data is adequately described, providing essential information about its source and structure. 
+
+### Summary assessment
+
+* source and overall structure of data somewhat explained
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+Overall, the data cleaning and processing steps are reasonable.
+
+### Summary assessment
+
+* some weaknesses in wrangling and exploratory component
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+Overall, the analysis methods are appropriate for the data and the analysis seems to have been conducted properly. Though when during analysis some defined re sampling is not used of few observations
+
+### Summary assessment
+
+* strong and reasonable analysis
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+Overall, the results are adequately presented with tables, the addition of figures and improvements in formatting and labeling could enhance readability and understanding, making the main figures and tables of publication-level quality.
+
+### Summary assessment
+
+* results are presented ok, with room for improvement
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+Overall, the study findings are discussed, there is room for improvement in acknowledging strengths and limitations and interpreting the findings in a more comprehensive and refined manner.
+
+### Summary assessment
+
+* minor parts wrong, missing or unclear
+
+
+## Further comments
+
+_The word document still has code when you render it. I think this can be improved and the document will be fine before submission._
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+The project is well structured, folders are named well, there are few undocumented readme files
+
+### Summary assessment
+
+* well structured
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+The files and folders are labelled well. code is documented well and the output explained but some readme are not well decribed.
+
+### Summary assessment
+
+* decently documented with some gaps
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+Yes, the results were reproducible, code run smoothly.
+
+
+### Summary assessment
+ 
+* fully reproducible without issues
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+Overall, the study is thorough.
+
+### Summary assessment
+
+* decent level of thoroughness
+
+## Further comments
+
+_The manuscript needs to be formatted well, put applicable references in the text and improve the discussion but otherwise well done._
+
+
+
+
+

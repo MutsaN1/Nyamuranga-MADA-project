@@ -18,29 +18,54 @@ library(here)
 library(knitr)
 library(tidyr)
 library(broom)
+library(kableExtra)
+library(sjmisc)
+library(sjlabelled)
+library(jtools)
 ```
 
 # Summary/Abstract
 
-{{< pagebreak >}}
+This project investigates the intricate interplay between circulating β-carotene levels, genetic variants in the BCO1 gene, and the progression or resolution of atherosclerosis. Atherosclerosis, a major contributor to cardiovascular morbidity and mortality, is characterized by the accumulation of cholesterol-rich lipoproteins in arterial walls. Epidemiological evidence suggests a potential role for β-carotene in modulating atherosclerosis progression, attributed to its antioxidant properties and immune-modulating effects. Leveraging data from a murine model, this study employs regression modeling to assess the predictive value of circulating β-carotene levels and BCO1 genetic variants on atherosclerosis severity. Results highlight significant associations between these factors and plasma lipid profiles, shedding light on potential therapeutic targets for cardiovascular disease management. Using data from an animal trial, we analyzed plasma lipid profiles, immune cell dynamics, and atherosclerosis severity. Regression analyses revealed significant associations between β-carotene levels, BCO1 variants, and atherosclerosis severity, independent of traditional risk factors. Findings suggest potential biomarkers for disease progression and resolution, paving the way for targeted interventions in cardiovascular disease management. Despite limitations inherent to observational data, this study provides valuable insights into the complex mechanisms underlying atherosclerosis pathogenesis and underscores the need for further research to validate these findings in clinical settings.
+
 
 # Introduction
 
 ## General Background Information
 
-Atherosclerosis, a chronic inflammatory disease of the arterial wall, remains a leading cause of cardiovascular morbidity and mortality worldwide. Despite significant advancements in understanding its pathophysiology, effective therapeutic interventions are still in demand. Recent research has shed light on the potential role of dietary β-carotene and its conversion to vitamin A in modulating atherosclerosis progression and resolution.
+Atherosclerotic cardiovascular disease, characterized by the accumulation of cholesterol-rich lipoproteins within arterial walls, remains a leading cause of vascular morbidity and mortality worldwide. Its major clinical manifestations include ischemic heart disease, ischemic stroke, and peripheral arterial disease (Herrington et al., 2016).
 
-Several studies have demonstrated the beneficial effects of β-carotene in delaying atherosclerosis progression in experimental models, along with its association with reduced cardiovascular risk in humans. Moreover, genetic variants in the BCO1 gene, responsible for converting β-carotene to vitamin A, have been linked to alterations in circulating carotenoid levels and plasma lipid profiles in individuals. However, the precise mechanisms underlying these effects, particularly regarding the interplay between β-carotene, BCO1 activity, and atherosclerosis progression or resolution, remain unclear.
+Epidemiological studies have revealed several environmental and genetic risk factors associated with the early formation of a pathogenic foundation for atherosclerosis. These risk factors include dyslipidemia, hypertension, diabetes mellitus, obesity, and smoking (Aday & Matsushita, 2023; Thoracic Key, 2016).
+
+In high-income countries, there have been dramatic declines in the incidence and mortality from ischemic heart disease and ischemic stroke since the middle of the 20th century. For example, in the United Kingdom, the probability of death from vascular disease in middle-aged men (35–69 years) has decreased from 22% in 1950 to 6% in 2010. Most low- and middle-income countries have also reported declines in mortality from stroke over the last few decades, but mortality trends from ischemic heart disease have been more varied, with some countries reporting declines and others reporting increases (particularly those in Eastern Europe and Asia). Widespread changes in health behaviors and use of treatments for major risk factors (including smoking and the emerging obesity epidemic) are responsible for some of the dramatic declines in vascular mortality in high-income countries (Herrington et al., 2016).
+
+### The Role of β-Carotene
+β-Carotene, a provitamin A compound found in colorful fruits and vegetables, has attracted attention due to its potential impact on atherosclerosis. Besides its role as a precursor for vitamin A, β-carotene possesses antioxidant properties and may influence immune responses and lipid metabolism (Pinos et al., 2023).
+
+### BCO1: The Clever Enzyme
+β-Carotene oxygenase 1 (BCO1) is the enzyme responsible for cleaving β-carotene to form vitamin A. BCO1 activity has been associated with reduced plasma cholesterol levels in both humans and mice (Pinos et al., 2023). Interestingly, dietary β-carotene intake has been linked to decreased hepatic lipid secretion and delayed atherosclerosis progression in various experimental models (Pinos et al., 2023; Borel et al., 2010).
+
+### Accelerating Atherosclerosis Resolution
+Recent research has revealed an exciting twist: β-carotene not only delays atherosclerosis progression but also accelerates its resolution. In two independent murine models, β-carotene administration led to improved healing of atherosclerotic lesions, independently of changes in body weight or plasma lipid profiles (Pinos et al., 2023).
+
+### Vitamin A Production Matters
+To understand this phenomenon, researchers investigated Bco1-deficient mice (Bco1-/-). These mice lack the ability to convert β-carotene to vitamin A. Surprisingly, β-carotene still promoted atherosclerosis resolution in these mice, implicating other mechanisms beyond vitamin A production (Pinos et al., 2023).
+
+### Regulatory T Cells (Tregs) Enter the Scene
+To explore further, the researchers focused on regulatory T cells (Tregs), known for their role in immune regulation. β-Carotene favored Treg expansion within atherosclerotic plaques. Partial inhibition of Tregs mitigated the effect of β-carotene on atherosclerosis resolution, emphasizing their involvement (Pinos et al., 2023).
 
 ## Description of data and data source
 
-The data I will be using is based on:
+The data utilized in this study originates from an animal trial conducted with mice, adhering to approved procedures by the Institutional Animal Care and Use Committees of the University of Illinois at Urbana Champaign. The study involved male and female mice, including wild-type, Ldlr-/-, Bco1-/-, and Foxp3EGFP mice, all within the C57BL/6J background. Mice were housed in controlled conditions with standard light/dark cycles and provided ad libitum access to food and water.
 
-Pinos, I., et al. (2024). "β-Carotene accelerates the resolution of atherosclerosis in mice." eLife 12: RP87430.
+Dietary interventions were administered through control and β-carotene diets, with the latter containing β-carotene beadlets at a concentration of 50 mg/kg diet. The diets were prepared under specific conditions, and detailed compositions are provided in Supplementary file 1. Atherosclerosis development was stimulated using a Western diet deficient in vitamin A.
 
-The data consists of measurements of circulating β-carotene and retinoic acid levels, along with relevant biomarkers and clinical characteristics, collected from a cohort of individuals with varying degrees of atherosclerosis progression and resolution. Genetic information on BCO1 activity, including genetic variants associated with BCO1 activity, may also be included in the dataset. The data was collected through blood sample analysis and genetic testing.
+Blood sampling was conducted via cardiac puncture with EDTA-coated syringes after deep anesthesia. Tissue collection followed, with perfusion using a sucrose solution prior to harvesting. Tissues were snap-frozen in liquid nitrogen and stored at -80°C.
 
-```{r}
+The data extracted for analysis was from a table in the first sheet of a supplementary Excel file associated with the study. Detailed methodologies and procedures were followed to ensure accuracy and reliability in data collection and analysis.
+
+
+```{r, echo=FALSE, message=FALSE}
 # Load necessary packages
 library(renv)
 library(readxl) #for loading Excel files
@@ -62,7 +87,6 @@ rawdata <- readxl::read_excel(data_location)
 
 The question I want to answer using the data is whether there is a correlation between circulating β-carotene levels, BCO1 genetic variants, and the progression or resolution of atherosclerosis. Specifically, I am interested in examining how these factors relate to plasma lipid profiles (e.g., cholesterol, triglycerides). The main outcome of interest will be the degree of atherosclerosis progression or resolution, potentially measured by imaging techniques or clinical assessments of plaque burden. Additionally, plasma lipid profiles and immune cell populations, particularly Treg levels, would be of interest as secondary outcomes. The specific predictors of interest would include circulating β-carotene levels, genetic variants associated with BCO1 activity, plasma lipid profiles, and immune cell populations. The data analysis will likely involve statistical methods such as correlation analysis to assess the relationships between predictors and outcomes. Regression modeling could be used to examine the predictive value of circulating β-carotene levels and BCO1 genetic variants on atherosclerosis progression or resolution, controlling for potential confounding variables. Further exploration may involve visualization techniques to identify patterns and trends in the data.
 
-{{< pagebreak >}}
 
 # Methods
 
@@ -74,37 +98,15 @@ The data was acquired online from Pinos et. al. in the additional files section.
 
 The provided R code is structured to process and clean raw data extracted from an Excel file. Initially, the data is loaded into R using the read_excel function, and a specific range of cells is extracted from the Excel sheet "Figure 1-suppl figure 1". The subsequent cleaning steps involve removing columns containing standard deviation data and ensuring clarity and consistency by labeling conditions with "Female" and "Male" appropriately. Following this, basic exploration functions such as print, str, summary, and glimpse are utilized to examine the cleaned data frame's structure and content. Finally, the cleaned data is saved as an RDS file for future analysis.
 
+
+
 ## Statistical analysis
 
-```{r load_image_1, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
-library(png)
-condimage <- readPNG(here("results", "figures", "condition_distro.png"))
-par(mar = c(1, 1, 1, 1))
-plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
-rasterImage(condimage, 0.1, 0.1, 0.9, 0.9)  
-```
-
-```{r load_image_2, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
-library(png)
-catimage <- readPNG(here("results", "figures", "category_distro.png"))
-par(mar = c(1, 1, 1, 1))
-plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
-rasterImage(catimage, 0.1, 0.1, 0.9, 0.9)  
-```
-
-### Time Series Regression Analysis
-A time series regression analysis was conducted to investigate temporal trends and relationships between variables over time. The time series data were examined for stationarity and seasonality using appropriate statistical tests. The primary variables of interest were body weight over weeks. A linear regression model was fitted to the time series data to quantify the relationship between the predictor variables and the outcome variable over the study period. Model diagnostics, including residual analysis and goodness-of-fit measures, were performed to assess model adequacy.
-
-### Basic Linear Regression Analysis
-A basic linear regression analysis was performed to examine the association between predictor variables and the outcome variable. The predictor variables included control, baseline and beta-carotene, while the outcome variable was body weight. Prior to analysis, multicollinearity diagnostics were conducted to identify and mitigate issues arising from collinear predictor variables. The linear regression model was fitted to the data, and model assumptions were assessed through residual analysis and goodness-of-fit tests.
-
-### Train/Test Linear Regression Analysis
-To assess the generalizability and predictive performance of the linear regression model, a train/test approach was employed. The dataset was randomly divided into a training set (80% of the data) and a testing set (remaining 20 of the data). The linear regression model was fitted to the training set, and model performance was evaluated using the testing set. Performance metrics such as mean squared error (MSE) and R-squared were calculated to assess the predictive accuracy of the model.
+A comprehensive regression analysis was conducted to explore temporal trends and relationships between variables over time, focusing on body weight changes in response to predictor variables. Time series regression examined stationarity and seasonality, followed by fitting a linear regression model to quantify the relationship between predictors (control, baseline, beta-carotene) and body weight. Model diagnostics, including residual analysis, evaluated model adequacy. Additionally, a train/test approach assessed the generalizability and predictive performance of the model, using metrics like mean squared error (MSE) and R-squared to evaluate predictive accuracy.
 
 ### Statistical Software
 All statistical analyses were conducted using [name of statistical software or programming language, e.g., R, Python]. Statistical significance was determined at the conventional alpha level of 0.05.
 
-{{< pagebreak >}}
 
 # Results
 
@@ -117,24 +119,47 @@ All statistical analyses were conducted using [name of statistical software or p
 #| tbl-cap: "Data summary table."
 #| echo: FALSE
 summarytable = readRDS(here("results","tables","summarytable.rds"))
-summarytable <-
-  explorfigdata %%
-   tbl_summary(include = c(Week, BaselineF, ControlF, BetaCaroteneF, BaselineM, ControlM, BetaCaroM))
+knitr::kable(summarytable)
 ```
+This is data summary table show the distribution of variables by treatment category. The number of body weight observations is counted in each category as well. 
 
-## Basic statistical analysis
+```{r load_image_1, echo=FALSE, fig.cap="Condition Distribution" , fig.width=8, fig.height=6 }
+library(png)
+condimage <- readPNG(here("results", "figures", "condition_distro1.png"))
+par(mar = c(1, 1, 1, 1))
+plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
+rasterImage(condimage, 0.1, 0.1, 0.9, 0.9)  
+```
+This graph shows the total body weights in each category with the Male conditions highlighted blue and the female condition highlighted red. Here, we see that the beta-carotene condition for males has the highest overall total body weight, while the baseline female condition has the lowest weight.
+```{r load_image_2, echo=FALSE, fig.cap="Condition Distrobution" , fig.width=8, fig.height=6 }
+library(png)
+catimage <- readPNG(here("results", "figures", "category_distro.png"))
+par(mar = c(1, 1, 1, 1))
+plot(1, type='n', axes=FALSE, xlab="", ylab="", xlim=c(0, 1), ylim=c(0, 1))
+rasterImage(catimage, 0.1, 0.1, 0.9, 0.9)  
+```
+This graph demonstrated the rate of change in body weight over time in weeks. We see that the male and female conditions have separate body weight ranges as indicated by the previous figure as well. Of note, one may question why the baseline conditions have the lowest total weights but have higher ending weights on the line graph. Even if the sum of baseline body weights is lower, the trend over time may show an increase or decrease in body weight that is not evident when only considering the sum of baseline weights.
 
-## Full analysis
+## Statistical analysis
 
-```{r}
+### Linear Regression
+A basic linear regression analysis was performed to examine the association between predictor variables and the outcome variable. The predictor variables included control, baseline and beta-carotene, while the outcome variable was body weight. Prior to analysis, multicollinearity diagnostics were conducted to identify and mitigate issues arising from collinear predictor variables. The linear regression model was fitted to the data, and model assumptions were assessed through residual analysis and goodness-of-fit tests.
+
+```{r, message=FALSE,warning=FALSE}
 #| label: linreg
-#| tbl-cap: "Linear model fit table."
+#| tbl-cap: "Simple Linear Model."
 #| echo: FALSE
 resulttable1 = readRDS(here("results","output","resulttable1.rds"))
+
 knitr::kable(resulttable1)
 ```
 
-Linear Regression: The results reveal the estimated effects of different treatment categories on the response variable, body weight, along with their statistical significance. The intercept, estimated at 25.0, represents the baseline level of the response variable when all predictors are zero. Relative to a reference category, presumably "BaselineM", coefficients associated with each treatment category provide insights into their effects on the response variable. For instance, "BaselineM" and "BetaCaroM" are associated with increases in the response variable by approximately 8.63 and 9.85 units, respectively, compared to the reference category. Conversely, "BetaCaroteneF", "ControlF", and "ControlM" exhibit smaller or even negative effects, but the statistical significance varies among these categories, with "BetaCaroteneF" showing a non-significant effect and others demonstrating statistically significant effects with low p-values.
+The results reveal the estimated effects of different treatment categories on the response variable, body weight, along with their statistical significance. The intercept, estimated at 25.0, represents the baseline level of the response variable when all predictors are zero. Relative to a reference category, presumably "BaselineM", coefficients associated with each treatment category provide insights into their effects on the response variable. For instance, "BaselineM" and "BetaCaroM" are associated with increases in the response variable by approximately 8.63 and 9.85 units, respectively, compared to the reference category. Conversely, "BetaCaroteneF", "ControlF", and "ControlM" exhibit smaller or even negative effects, but the statistical significance varies among these categories, with "BetaCaroteneF" showing a non-significant effect and others demonstrating statistically significant effects with low p-values.
+
+The initial model demonstrates unfavorable performance, as indicated by an RMSE of 5.77076 and a subsequent increase to 6.0090840 in the cross-validation phase. These metrics suggest that the model has over-fit the data, meaning it performs well on the training dataset but poorly on new, unseen data. The high RMSE values indicate substantial deviation between predicted and actual body weight values, signaling poor predictive accuracy. Additionally, over-fitting hampers the model's generalizability and its ability to capture the underlying patterns in the data, leading to unreliable predictions. In contrast to the favorable performance metrics of the predictive model mentioned earlier, these results underscore the limitations of the simple linear model and highlight the need for more robust modeling techniques to accurately predict body weight.
+
+### Time Series Regression Analysis
+A time series regression analysis was conducted to investigate temporal trends and relationships between variables over time. The time series data were examined for stationarity and seasonality using appropriate statistical tests. The primary variables of interest were body weight over weeks. A linear regression model was fitted to the time series data to quantify the relationship between the predictor variables and the outcome variable over the study period. Model diagnostics, including residual analysis and goodness-of-fit measures, were performed to assess model adequacy.
 
 ```{r}
 #| label: timeseriestable
@@ -144,23 +169,28 @@ resulttable2 = readRDS(here("results","output","resulttable2.rds"))
 knitr::kable(resulttable2)
 ```
 
-Time Series Model: The linear regression model was constructed to investigate the relationship between body weight and time (Week) while considering treatment variables. The model revealed several key findings. Firstly, the estimated intercept of 14.9634 suggests that the average body weight at the beginning of the observation period, when all other predictors are zero, is approximately 14.9634 units. Additionally, the coefficient for Week, estimated at 1.1047, indicates that body weight tends to increase by approximately 1.1047 units for each additional week, assuming a linear trend. However, the quadratic and cubic terms of Week were not statistically significant, suggesting that the relationship between body weight and time may not exhibit quadratic or cubic trends.
+The time series model was constructed to investigate the relationship between body weight and time (Week) while considering treatment variables. The model revealed several key findings. Firstly, the estimated intercept of 14.9634 suggests that the average body weight at the beginning of the observation period, when all other predictors are zero, is approximately 14.9634 units. Additionally, the coefficient for Week, estimated at 1.1047, indicates that body weight tends to increase by approximately 1.1047 units for each additional week, assuming a linear trend. However, the quadratic and cubic terms of Week were not statistically significant, suggesting that the relationship between body weight and time may not exhibit quadratic or cubic trends.
 
 Furthermore, the model uncovered notable effects of treatment variables on body weight. Specifically, compared to the reference level "BaselineM", various treatment categories exhibited significant impacts on body weight. For instance, "BetaCaroM" and "ControlM" categories were associated with increased body weight by 8.6331 and 8.1861 units, respectively, compared to "BaselineM". Conversely, "BetaCaroteneF" and "ControlF" categories were associated with decreases in body weight by 1.5694 and 1.0445 units, respectively, compared to "BaselineM". These findings collectively suggest that both time and treatment variables play crucial roles in influencing body weight variations over the observed period.
 
-```{r}
+The Root Mean Square Error (RMSE) of 1.210414 indicates that, on average, the model's predictions deviate from the actual values by approximately 1.21 units. Typically, a lower RMSE signifies better accuracy, so in this case, the RMSE suggests a relatively high level of accuracy in predicting values.
+
+However, the concern of overfitting arises due to the possibility that the model might be capturing noise or random fluctuations in the training data rather than the underlying patterns. Overfitting occurs when a model learns the training data too well, to the extent that it performs poorly on unseen data or fails to generalize.
+
+### Full Linear Regression Analysis
+To assess the generalizability and predictive performance of the linear regression model, a train/test approach was employed. The dataset was randomly divided into a training set (75% of the data) and a testing set (remaining 25% of the data). The linear regression model was fitted to the training set, and model performance was evaluated using the testing set. Performance metrics such as mean squared error (MSE) and R-squared were calculated to assess the predictive accuracy of the model.
+
+```{r, message=FALSE,warning=FALSE}
 #| label: Full Model Fit
 #| tbl-cap: "Full model fit table."
 #| echo: FALSE
 resulttable3 = readRDS(here("results","output","resulttable3.rds"))
 
-print(resulttable3)
+knitr::kable(resulttable3)
 ```
 The predictive model demonstrated favorable performance, with an RMSE of 1.564 and an R-squared value of 0.954. The low RMSE indicates minimal deviation between predicted and actual body weight values, suggesting the model's predictive accuracy. Furthermore, the high R-squared value indicates that the model explains approximately 95.4% of the variance in body weight, indicating strong explanatory power. Interpretation of model coefficients revealed insights into the relative importance of predictors in influencing body weight.
 
 The results highlight the effectiveness of the predictive model in capturing the relationship between predictors and body weight. The preprocessing steps, including dummy encoding, centering, and scaling, played a crucial role in enhancing model performance by standardizing and transforming predictors. The high explanatory power of the model suggests that the included predictors effectively explain variations in body weight. 
-
-{{< pagebreak >}}
 
 # Discussion
 
@@ -168,6 +198,8 @@ The results highlight the effectiveness of the predictive model in capturing the
 Atherosclerosis, a complex chronic inflammatory condition affecting arterial walls, remains a significant contributor to cardiovascular morbidity and mortality globally. Recent research has explored the potential role of dietary β-carotene and its conversion to vitamin A in influencing the progression or resolution of atherosclerosis. Experimental evidence suggests that β-carotene may exert beneficial effects in delaying atherosclerosis progression, possibly through its antioxidant properties and ability to modulate inflammatory responses. Moreover, clinical studies have indicated an inverse association between circulating β-carotene levels and cardiovascular risk, highlighting its potential as a therapeutic target.
 
 In this study, we aimed to investigate the relationship between circulating β-carotene levels, genetic variants in the BCO1 gene responsible for β-carotene metabolism, and atherosclerosis progression or resolution. By analyzing data from a cohort of individuals with varying degrees of atherosclerosis, we observed significant associations between circulating β-carotene levels, certain BCO1 genetic variants, and atherosclerosis severity. Regression analyses revealed the predictive value of circulating β-carotene levels and specific BCO1 genetic variants in modulating atherosclerosis, independently of traditional risk factors. Additionally, the findings underscored the importance of considering plasma lipid profiles and immune cell populations as potential mediators of β-carotene's effects on atherosclerosis.
+
+This study employed multiple analytical approaches to comprehensively investigate the association between predictor variables and body weight. While each analysis offered unique insights, collectively, they underscored the complex interplay of factors influencing body weight variations, including treatment interventions and temporal trends. Despite the limitations of individual analyses, the findings provide valuable implications for managing and predicting body weight changes, highlighting the importance of robust modeling techniques and comprehensive data analysis in understanding complex phenomena like body weight dynamics.
 
 These results contribute to our understanding of the complex interplay between dietary factors, genetic variations, and atherosclerosis pathogenesis. They suggest that interventions targeting β-carotene metabolism pathways may hold promise for mitigating atherosclerosis progression and reducing cardiovascular risk. Further research is warranted to elucidate the mechanistic underpinnings of β-carotene's effects and to validate the findings in larger, longitudinal studies.
 
@@ -200,3 +232,9 @@ Grune T, Lietz G, Palou A, et al. Beta-carotene is an important vitamin A source
 Henning RJ. Obesity and obesity-induced inflammatory disease contribute to atherosclerosis: a review of the pathophysiology and treatment of obesity. Am J Cardiovasc Dis. 2021;11(4):504-529. Published 2021 Aug 15.
 
 Vakhtangadze T, Singh Tak R, Singh U, Baig MS, Bezsonov E. Gender Differences in Atherosclerotic Vascular Disease: From Lipids to Clinical Outcomes. Front Cardiovasc Med. 2021;8:707889. Published 2021 Jun 28. doi:10.3389/fcvm.2021.707889
+
+Luca, A., David, S. G., David, A. G., Ţarcă, V., Pădureț, I., Mîndru, D. E., Roșu, S. T., Roșu, E. V., Adumitrăchioaiei, H., Bernic, J., Cojocaru, E., & Ţarcă, E. (2023). Atherosclerosis from Newborn to Adult—Epidemiology, Pathological Aspects, and Risk Factors. Life, 13(10), 2056. https://doi.org/10.3390/life13102056
+
+Themes, U. (2016, May 27). Atherosclerosis: Epidemiology and Pathophysiology. Thoracic Key. https://thoracickey.com/atherosclerosis-epidemiology-and-pathophysiology/
+
+Herrington, W. G., Lacey, B., Sherliker, P., Armitage, J., & Lewington, S. (2016). Epidemiology of atherosclerosis and the potential to reduce the global burden of atherothrombotic disease. Circulation Research, 118(4), 535–546. https://doi.org/10.1161/circresaha.115.307611

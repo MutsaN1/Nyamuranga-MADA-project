@@ -25,6 +25,9 @@ library(patchwork) #for combine plots
 library(tidymodels)
 library(recipes)
 library(parsnip)
+library(broom.mixed) # for converting bayesian models to tidy tibbles
+library(dotwhisker)  # for visualizing regression results
+library(jtools) # Load jtools
 ```
 
 ## Load Data
@@ -50,20 +53,169 @@ around their mean, and step_scale scales numeric predictors to have unit
 variance.
 
 ## First model fit
-```{r}
-# fit linear model using height as outcome, weight as predictor
 
-linCat <- lm(BodyWeight ~ Category, body_weights)  
+```{r}
+# Define the recipe
+body1_recipe <- recipe(BodyWeight ~ Category, data = body_weights) %>%
+  step_dummy(all_nominal(), -all_outcomes()) %>%
+  step_center(all_predictors()) %>%
+  step_scale(all_predictors())
+
+# Split data into training and testing sets
+set.seed(123)  # for reproducibility
+body1_split <- initial_split(body_weights, prop = 0.75, strata = BodyWeight)
+body1_train <- training(body1_split)
+body1_test <- testing(body1_split)
+
+str(body1_test)
+str(body1_train)
+
+# Define the linear regression model specification
+linear_spec <- linear_reg() %>%
+  set_engine("lm") %>%
+  set_mode("regression")
+
+# Create a workflow that incorporates the recipe and the model
+body1_workflow <- workflow() %>%
+  add_recipe(body1_recipe) %>%
+  add_model(linear_spec)
+```
+The fit function fits the workflow to the training data. This step
+applies the preprocessing steps defined in the recipe to the training
+data and then fits the linear regression model to the preprocessed data.
+
+The predict function generates predictions from the fitted model using
+the testing data. This step applies the preprocessing steps (from the
+recipe) to the testing data and then predicts the outcome variable (Y)
+using the fitted linear regression model.
+
+The metrics function computes evaluation metrics for the model
+predictions. Here, we calculate the root mean squared error (RMSE) and
+the R-squared value to assess the model's performance. The computed
+metrics are then extracted and stored in the variables all_rmse and
+all_r_squared, respectively.
+
+```{r}
+# Convert BodyWeight to numeric if it's stored as character
+body1_train$BodyWeight <- as.numeric(body1_train$BodyWeight)
+
+# Convert BodyWeight to numeric if it's stored as character
+body1_test$BodyWeight <- as.numeric(body1_test$BodyWeight)
+
+
+# Fit the workflow to the training data
+linCat <- fit(body1_workflow, data = body1_train)
+
+# Compute predictions on the testing data
+body1_preds <- predict(linCat, new_data = body1_test) %>%
+  bind_cols(body1_test)
+```
+
+```{r}
+# Compute RMSE and R-squared for the model
+all_metrics <- body1_preds %>%
+  metrics(truth = BodyWeight, estimate = .pred)
+
+all_rmse <- all_metrics %>%
+  filter(.metric == "rmse") %>%
+  pull(.estimate)
+
+all_r_squared <- all_metrics %>%
+  filter(.metric == "rsq") %>%
+  pull(.estimate)
+```
+
+```{r}
+# Print RMSE and R-squared for the model
+cat("Model:\n")
+cat("RMSE:", all_rmse, "\n")
+cat("R-squared:", all_r_squared, "\n")
+
+all_rmse
+all_r_squared
+tidy(linCat)
+```
+The RMSE is 5.77076
+
+### Model Tuning
+So, I will tune the model using cross-validation
+
+The model performance is evaluated using the
+cross-validation technique employing 10 folds for the two main models.
+This technique involves dividing the training data into 10 subsets and
+iteratively using 9 of them for model fitting while reserving the
+remaining 10% for evaluation. This process is repeated 10 times,
+ensuring that each subset serves as both training and evaluation data.
+
+```{r}
+# Train the model using train function from caret package
+set.seed(234)  # for reproducibility
+folds1 <-vfold_cv(body1_train, v=10)
+folds1
+```
+Subsequently, an object for resampling is constructed using the
+'workflow' function from tidymodels. This function combines
+pre-processing, modeling, and post-processing instructions into a single
+entity, streamlining the analysis pipeline.
+
+```{r}
+#Resampling using workflow for the model with only DOSE as predictor
+linCat2 <- 
+	workflow() %>%
+	add_model(linear_spec) %>%
+  add_formula(BodyWeight ~ Category)%>%
+	fit_resamples(folds1)
+
+collect_metrics(linCat2)
+```
+Using cross-validation, the RMSE increases to 6.0090840.
+
+```{r}
+#| message: false
+#| warning: false
+# Creating a data-frame with observed and predicted values from the model with `Category` as the predictor
+lin1_fit <- linCat %>%
+  predict(body1_train) %>%
+  bind_cols(body1_train)
+
+#I added a label column and dubbed it 'Simple Linear model'
+lin1_fit$label <- rep("Simple Linear Model")
+
+# Create the ggplot figure to graph the predictive values vs the observed value for the three models
+p1 <- ggplot(
+  lin1_fit, aes(x = BodyWeight, y = .pred, color = label, shape = label)) +
+  geom_point(size=2) +
+   scale_color_manual(values = c("#9467bd", "#ff9896", "#17becf"))+
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") +  # Adding a 45-degree line
+  labs(x = "Observed Values", y = "Predicted Values", color = "Model", shape = "Model") +
+  xlim(0, 50) + 
+  ylim(0, 50)+
+  theme_bw()
+
+# Viewing the plot
+p1
+```
+Based on the results of the initial model fitting generating a RMSE of 5.77076 and the cross-validation generating a RMSE increase to 6.0090840, we can conclude that this first model has over-fit the data. 
+ 
+With this, I will move on to other models to find a RMSE that works best for assessing the data. 
+```{r}
+figure_file3 = here("results", "figures", "SimpleLinearPlot.png")
+ggsave(filename = figure_file3, plot= p1) 
+```
+
+```{r}
+# Summary of the model
+summary(linCat)
 
 # place results from fit into a data frame with the tidy function
-linCattable <- broom::tidy(linCat)
+fullmodel1 <- broom::tidy(linCat)
 
 #look at fit results
-print(linCattable)
+print(fullmodel1)
 
 # save fit results table  
-table_linCat = here("results", "resulttable1.rds")
-saveRDS(linCattable, file = table_linCat)
+model1_file = here("results", "output", "resulttable1.rds")
+saveRDS(fullmodel1, file = model1_file)
 ```
 
 ## Second model fit
@@ -86,7 +238,56 @@ print(timeseriestbl)
 # save fit results table  
 seriestable_file2 = here("results", "resulttable2.rds")
 saveRDS(timeseriestbl, file = seriestable_file2)
+
+# Convert the results into a data frame
+results <- data.frame(
+  term = c("(Intercept)", "Week", "I(Week^2)", "I(Week^3)", 
+           "CategoryBaselineM", "CategoryBetaCaroM", 
+           "CategoryBetaCaroteneF", "CategoryControlF", "CategoryControlM"),
+  estimate = c(14.963391564, 1.104685173, 0.035042256, -0.002315347,
+               8.629167500, 8.633072223, -1.569384093, -1.044471462, 8.186054854),
+  std.error = c(0.6518010412, 0.2519033316, 0.0292788770, 0.0009802486,
+                0.4469748457, 0.4325930512, 0.4325930512, 0.4325930512, 0.4325930512)
+)
+
+# Calculate the confidence intervals
+results$lower_ci <- results$estimate - 1.96 * results$std.error
+results$upper_ci <- results$estimate + 1.96 * results$std.error
+
+# Plot a forest plot
+library(ggplot2)
+
+ggplot(results, aes(x = estimate, y = term)) +
+  geom_point() +
+  geom_errorbarh(aes(xmin = lower_ci, xmax = upper_ci)) +
+  labs(title = "Forest Plot of Regression Coefficients",
+       x = "Estimate",
+       y = "Term") +
+  theme_minimal()
 ```
+```{r}
+# Convert BodyWeight to numeric
+body_weights$BodyWeight <- as.numeric(body_weights$BodyWeight)
+
+# Remove observations with missing values
+complete_data <- body_weights[!is.na(body_weights$BodyWeight),]
+
+# Obtain predicted values for complete data
+predicted_time_complete <- predict(timeseries, newdata = complete_data)
+
+# Calculate residuals
+residuals_complete <- complete_data$BodyWeight - predicted_time_complete
+
+# Calculate RMSE
+rmse_complete <- sqrt(mean(residuals_complete^2))
+
+# Print RMSE
+print(rmse_complete)
+```
+The RMSE for this model is 1.210414. 
+
+This shows a high level of accuracy in predicting values, however, we can assume that this model may also be over fitting due to an increase level of nuance within the data being taken in to consideration. 
+
 ## Third Model Fit
 ```{r}
 # Define the recipe
@@ -194,6 +395,21 @@ cat("R-squared:", all_r_squared, "\n")
 
 body_predictions
 tidy(body_fit)
+```
+
+```{r}
+# Summary of the model
+summary(body_fit)
+
+# place results from fit into a data frame with the tidy function
+fullmodel <- broom::tidy(body_fit)
+
+#look at fit results
+print(fullmodel)
+
+# save fit results table  
+model2_file = here("results", "output", "resulttable3.rds")
+saveRDS(fullmodel, file = model2_file)
 ```
 
 # Results

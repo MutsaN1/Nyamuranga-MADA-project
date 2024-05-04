@@ -46,8 +46,11 @@ Here I am taking the Figure 1a data table from the paper and clean the data to f
 
 ```{r}
 # Remove specified columns and rows
-figure1a<- figure1a[, -c(3, 5, 7, 9, 11, 13)]
+figure1a <- figure1a[, -c(3, 5, 7, 9, 11, 13)]
 figure1afixed <- figure1a[-1, ]
+
+# Remove missing data
+figure1afixed <- na.omit(figure1afixed)
 
 # Fixing Female and Male to condition
 figdata <- figure1afixed %>%
@@ -68,9 +71,15 @@ glimpse(figdata)
 
 
 
+
 All done, data is clean now. 
 
 Let's assign at the end to some final variable, this makes it easier to add further cleaning steps above.
+
+```{R}
+# Assign the cleaned data frame to a final variable
+cleaned_data <- figdata
+```
 
 
 # Save data 
@@ -89,5 +98,5 @@ saveRDS(figdata, file = save_data_location)
 
 # Notes
 
-Removing anyone who had "faulty" or missing data is one approach. It's often not the best. based on your question and your analysis approach, you might want to do cleaning differently (e.g. keep individuals with some missing information).
+The missing data was included in order to keep whole categories from being removed. While it may weaken extrapolation in analysis coding, it is necessary for the cleaning process. 
 
